@@ -50,8 +50,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IdentityContext.cs" />
     <Compile Include="IdentityUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserStore.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

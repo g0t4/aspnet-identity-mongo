@@ -12,7 +12,7 @@
 		public void ToBsonDocument_IdAssigned_MapsToBsonObjectId()
 		{
 			var user = new IdentityUser();
-			user.AsDynamic().Id = ObjectId.GenerateNewId().ToString();
+			user.SetUserId(ObjectId.GenerateNewId().ToString());
 
 			var document = user.ToBsonDocument();
 

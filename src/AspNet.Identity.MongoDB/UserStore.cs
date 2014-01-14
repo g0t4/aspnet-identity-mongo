@@ -17,6 +17,7 @@
 
 		public void Dispose()
 		{
+			// no need to dispose of anything, mongodb handles connection pooling automatically
 		}
 
 		public Task CreateAsync(TUser user)

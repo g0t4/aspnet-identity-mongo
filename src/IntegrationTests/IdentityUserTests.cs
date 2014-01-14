@@ -3,7 +3,6 @@
 	using AspNet.Identity.MongoDB;
 	using MongoDB.Bson;
 	using NUnit.Framework;
-	using ReflectionMagic;
 	using Tests;
 
 	[TestFixture]

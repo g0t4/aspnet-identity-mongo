@@ -1,5 +1,6 @@
 ﻿namespace Tests
 {
+	using System.Collections.Generic;
 	using AspNet.Identity.MongoDB;
 	using MongoDB.Bson;
 	using NUnit.Framework;
@@ -39,5 +40,27 @@
 
 			Expect(document.Contains("PasswordHash"), Is.False);
 		}
+
+		[Test]
+		public void Create_NewIdentityUser_RolesNotNull()
+		{
+			var user = new IdentityUser();
+
+			Expect(user.Roles, Is.Not.Null);
+		}
+
+		[Test]
+		public void Create_NullRoles_DoesNotSerializeRoles()
+		{
+			// serialized nulls can cause havoc in deserialization, overwriting the constructor's initial empty list 
+			var user = new IdentityUser();
+			user.Roles = null;
+
+			var document = user.ToBsonDocument();
+
+			Expect(document.Contains("Roles"), Is.False);
+		}
+		
+		// todo consider if we want to not serialize the empty Roles array
 	}
 }

@@ -1,11 +1,12 @@
 ﻿namespace AspNet.Identity.MongoDB
 {
+	using System.Collections.Generic;
 	using System.Threading.Tasks;
 	using global::MongoDB.Bson;
 	using global::MongoDB.Driver.Builders;
 	using Microsoft.AspNet.Identity;
 
-	public class UserStore<TUser> : IUserStore<TUser>, IUserPasswordStore<TUser>
+	public class UserStore<TUser> : IUserStore<TUser>, IUserPasswordStore<TUser>, IUserRoleStore<TUser>
 		where TUser : IdentityUser
 	{
 		private readonly IdentityContext _Context;
@@ -62,6 +63,28 @@
 		public Task<bool> HasPasswordAsync(TUser user)
 		{
 			return Task.FromResult(user.HasPassword());
+		}
+
+		public Task AddToRoleAsync(TUser user, string roleName)
+		{
+			user.AddRole(roleName);
+			return Task.FromResult(0);
+		}
+
+		public Task RemoveFromRoleAsync(TUser user, string roleName)
+		{
+			user.RemoveRole(roleName);
+			return Task.FromResult(0);
+		}
+
+		public Task<IList<string>> GetRolesAsync(TUser user)
+		{
+			return Task.FromResult((IList<string>) user.Roles);
+		}
+
+		public Task<bool> IsInRoleAsync(TUser user, string roleName)
+		{
+			return Task.FromResult(user.Roles.Contains(roleName));
 		}
 	}
 }

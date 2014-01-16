@@ -8,7 +8,7 @@
 	using global::MongoDB.Driver.Linq;
 	using Microsoft.AspNet.Identity;
 
-	public class UserStore<TUser> : IUserStore<TUser>, IUserPasswordStore<TUser>, IUserRoleStore<TUser>, IUserLoginStore<TUser>
+	public class UserStore<TUser> : IUserStore<TUser>, IUserPasswordStore<TUser>, IUserRoleStore<TUser>, IUserLoginStore<TUser>, IUserSecurityStampStore<TUser>
 		where TUser : IdentityUser
 	{
 		private readonly IdentityContext _Context;
@@ -112,6 +112,17 @@
 				.StartNew(() => _Context.Users.AsQueryable<TUser>()
 					.FirstOrDefault(u => u.Logins
 						.Any(l => l.LoginProvider == login.LoginProvider && l.ProviderKey == login.ProviderKey)));
+		}
+
+		public Task SetSecurityStampAsync(TUser user, string stamp)
+		{
+			user.SecurityStamp = stamp;
+			return Task.FromResult(0);
+		}
+
+		public Task<string> GetSecurityStampAsync(TUser user)
+		{
+			return Task.FromResult(user.SecurityStamp);
 		}
 	}
 }

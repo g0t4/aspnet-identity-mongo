@@ -64,6 +64,7 @@
     <Compile Include="UserLoginStoreTests.cs" />
     <Compile Include="UserPasswordStoreTests.cs" />
     <Compile Include="UserRoleStoreTests.cs" />
+    <Compile Include="UserSecurityStampStoreTests.cs" />
     <Compile Include="UserStoreTests.cs" />
   </ItemGroup>
   <ItemGroup>

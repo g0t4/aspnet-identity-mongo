@@ -45,7 +45,5 @@
 			var isConfirmed = manager.IsConfirmed(user.Id);
 			Expect(isConfirmed, Is.False);
 		}
-
-		// todo look into ITokenProvider (and potentially mongo persistence?)
 	}
 }

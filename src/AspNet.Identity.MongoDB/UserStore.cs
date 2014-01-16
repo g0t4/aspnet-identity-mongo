@@ -2,13 +2,14 @@
 {
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Security.Claims;
 	using System.Threading.Tasks;
 	using global::MongoDB.Bson;
 	using global::MongoDB.Driver.Builders;
 	using global::MongoDB.Driver.Linq;
 	using Microsoft.AspNet.Identity;
 
-	public class UserStore<TUser> : IUserStore<TUser>, IUserPasswordStore<TUser>, IUserRoleStore<TUser>, IUserLoginStore<TUser>, IUserSecurityStampStore<TUser>, IUserConfirmationStore<TUser>, IUserEmailStore<TUser>
+	public class UserStore<TUser> : IUserStore<TUser>, IUserPasswordStore<TUser>, IUserRoleStore<TUser>, IUserLoginStore<TUser>, IUserSecurityStampStore<TUser>, IUserConfirmationStore<TUser>, IUserEmailStore<TUser>, IUserClaimStore<TUser>
 		where TUser : IdentityUser
 	{
 		private readonly IdentityContext _Context;
@@ -151,6 +152,23 @@
 		{
 			// todo what if a user can have multiple accounts with the same email?
 			return Task.Run(() => _Context.Users.AsQueryable<TUser>().FirstOrDefault(u => u.Email == email));
+		}
+
+		public Task<IList<Claim>> GetClaimsAsync(TUser user)
+		{
+			return Task.FromResult((IList<Claim>) user.Claims.Select(c => c.ToSecurityClaim()).ToList());
+		}
+
+		public Task AddClaimAsync(TUser user, Claim claim)
+		{
+			user.AddClaim(claim);
+			return Task.FromResult(0);
+		}
+
+		public Task RemoveClaimAsync(TUser user, Claim claim)
+		{
+			user.RemoveClaim(claim);
+			return Task.FromResult(0);
 		}
 	}
 }

@@ -107,5 +107,25 @@
 			var after = DateTime.UtcNow;
 			Expect(user.ConfirmedAtUtc, Is.Not.InRange(before, after));
 		}
+
+		[Test]
+		public void Create_NewIdentityUser_ClaimsNotNull()
+		{
+			var user = new IdentityUser();
+
+			Expect(user.Claims, Is.Not.Null);
+		}
+
+		[Test]
+		public void Create_NullClaims_DoesNotSerializeClaims()
+		{
+			// serialized nulls can cause havoc in deserialization, overwriting the constructor's initial empty list 
+			var user = new IdentityUser();
+			user.Claims = null;
+
+			var document = user.ToBsonDocument();
+
+			Expect(document.Contains("Claims"), Is.False);
+		}
 	}
 }

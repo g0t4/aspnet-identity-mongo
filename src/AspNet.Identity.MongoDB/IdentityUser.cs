@@ -3,6 +3,7 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Security.Claims;
 	using global::MongoDB.Bson;
 	using global::MongoDB.Bson.Serialization.Attributes;
 	using Microsoft.AspNet.Identity;
@@ -14,6 +15,7 @@
 			Id = ObjectId.GenerateNewId().ToString();
 			Roles = new List<string>();
 			Logins = new List<UserLoginInfo>();
+			Claims = new List<IdentityUserClaim>();
 		}
 
 		[BsonRepresentation(BsonType.ObjectId)]
@@ -78,6 +80,23 @@
 		public virtual bool HasPassword()
 		{
 			return false;
+		}
+
+		[BsonIgnoreIfNull]
+		public List<IdentityUserClaim> Claims { get; set; }
+
+		public virtual void AddClaim(Claim claim)
+		{
+			Claims.Add(new IdentityUserClaim(claim));
+		}
+
+		public virtual void RemoveClaim(Claim claim)
+		{
+			var claimsToRemove = Claims
+				.Where(c => c.Type == claim.Type)
+				.Where(c => c.Value == claim.Value);
+
+			Claims = Claims.Except(claimsToRemove).ToList();
 		}
 	}
 }

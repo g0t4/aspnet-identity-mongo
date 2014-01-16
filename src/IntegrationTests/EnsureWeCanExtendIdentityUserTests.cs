@@ -17,7 +17,7 @@
 		}
 
 		[SetUp]
-		public void BeforeEachTest()
+		public void BeforeEachTestAfterBase()
 		{
 			var context = new IdentityContext(Users);
 			var userStore = new UserStore<ExtendedIdentityUser>(context);

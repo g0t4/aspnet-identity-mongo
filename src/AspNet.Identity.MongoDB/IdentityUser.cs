@@ -1,6 +1,7 @@
 ﻿namespace AspNet.Identity.MongoDB
 {
 	using System.Collections.Generic;
+	using System.Linq;
 	using global::MongoDB.Bson;
 	using global::MongoDB.Bson.Serialization.Attributes;
 	using Microsoft.AspNet.Identity;
@@ -11,6 +12,7 @@
 		{
 			Id = ObjectId.GenerateNewId().ToString();
 			Roles = new List<string>();
+			Logins = new List<UserLoginInfo>();
 		}
 
 		[BsonRepresentation(BsonType.ObjectId)]
@@ -33,6 +35,23 @@
 
 		[BsonIgnoreIfNull]
 		public virtual string PasswordHash { get; set; }
+
+		[BsonIgnoreIfNull]
+		public List<UserLoginInfo> Logins { get; set; }
+
+		public virtual void AddLogin(UserLoginInfo login)
+		{
+			Logins.Add(login);
+		}
+
+		public virtual void RemoveLogin(UserLoginInfo login)
+		{
+			var loginsToRemove = Logins
+				.Where(l => l.LoginProvider == login.LoginProvider)
+				.Where(l => l.ProviderKey == login.ProviderKey);
+
+			Logins = Logins.Except(loginsToRemove).ToList();
+		}
 
 		public virtual bool HasPassword()
 		{

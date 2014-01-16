@@ -1,12 +1,14 @@
 ﻿namespace AspNet.Identity.MongoDB
 {
 	using System.Collections.Generic;
+	using System.Linq;
 	using System.Threading.Tasks;
 	using global::MongoDB.Bson;
 	using global::MongoDB.Driver.Builders;
+	using global::MongoDB.Driver.Linq;
 	using Microsoft.AspNet.Identity;
 
-	public class UserStore<TUser> : IUserStore<TUser>, IUserPasswordStore<TUser>, IUserRoleStore<TUser>
+	public class UserStore<TUser> : IUserStore<TUser>, IUserPasswordStore<TUser>, IUserRoleStore<TUser>, IUserLoginStore<TUser>
 		where TUser : IdentityUser
 	{
 		private readonly IdentityContext _Context;
@@ -85,6 +87,31 @@
 		public Task<bool> IsInRoleAsync(TUser user, string roleName)
 		{
 			return Task.FromResult(user.Roles.Contains(roleName));
+		}
+
+		public Task AddLoginAsync(TUser user, UserLoginInfo login)
+		{
+			user.AddLogin(login);
+			return Task.FromResult(0);
+		}
+
+		public Task RemoveLoginAsync(TUser user, UserLoginInfo login)
+		{
+			user.RemoveLogin(login);
+			return Task.FromResult(0);
+		}
+
+		public Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user)
+		{
+			return Task.FromResult((IList<UserLoginInfo>) user.Logins);
+		}
+
+		public Task<TUser> FindAsync(UserLoginInfo login)
+		{
+			return Task.Factory
+				.StartNew(() => _Context.Users.AsQueryable<TUser>()
+					.FirstOrDefault(u => u.Logins
+						.Any(l => l.LoginProvider == login.LoginProvider && l.ProviderKey == login.ProviderKey)));
 		}
 	}
 }

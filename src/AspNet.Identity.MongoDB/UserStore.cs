@@ -8,7 +8,7 @@
 	using global::MongoDB.Driver.Linq;
 	using Microsoft.AspNet.Identity;
 
-	public class UserStore<TUser> : IUserStore<TUser>, IUserPasswordStore<TUser>, IUserRoleStore<TUser>, IUserLoginStore<TUser>, IUserSecurityStampStore<TUser>, IUserConfirmationStore<TUser>
+	public class UserStore<TUser> : IUserStore<TUser>, IUserPasswordStore<TUser>, IUserRoleStore<TUser>, IUserLoginStore<TUser>, IUserSecurityStampStore<TUser>, IUserConfirmationStore<TUser>, IUserEmailStore<TUser>
 		where TUser : IdentityUser
 	{
 		private readonly IdentityContext _Context;
@@ -134,6 +134,23 @@
 		{
 			user.SetConfirmed(confirmed);
 			return Task.FromResult(0);
+		}
+
+		public Task SetEmailAsync(TUser user, string email)
+		{
+			user.Email = email;
+			return Task.FromResult(0);
+		}
+
+		public Task<string> GetEmailAsync(TUser user)
+		{
+			return Task.FromResult(user.Email);
+		}
+
+		public Task<TUser> FindByEmailAsync(string email)
+		{
+			// todo what if a user can have multiple accounts with the same email?
+			return Task.Run(() => _Context.Users.AsQueryable<TUser>().FirstOrDefault(u => u.Email == email));
 		}
 	}
 }

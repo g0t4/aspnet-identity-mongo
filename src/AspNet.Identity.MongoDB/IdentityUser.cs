@@ -26,6 +26,8 @@
 		[BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
 		public virtual DateTime? ConfirmedAtUtc { get; set; }
 
+		public virtual string Email { get; set; }
+
 		public virtual void SetConfirmed(bool confirmed)
 		{
 			if (!confirmed)

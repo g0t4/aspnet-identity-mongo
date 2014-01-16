@@ -19,5 +19,13 @@
 			var unique = new IndexOptionsBuilder().SetUnique(true);
 			users.EnsureIndex(userName, unique);
 		}
+
+		public void EnsureUniqueIndexOnEmail()
+		{
+			// note: I'm not making the index on email required, I'd like to start a conversation around how to ensure indexes
+			var email = new IndexKeysBuilder().Ascending("Email");
+			var unique = new IndexOptionsBuilder().SetUnique(true);
+			Users.EnsureIndex(email, unique);
+		}
 	}
 }

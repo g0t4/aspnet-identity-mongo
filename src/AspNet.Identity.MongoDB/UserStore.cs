@@ -9,7 +9,7 @@
 	using global::MongoDB.Driver.Linq;
 	using Microsoft.AspNet.Identity;
 
-	public class UserStore<TUser> : IUserStore<TUser>, IUserPasswordStore<TUser>, IUserRoleStore<TUser>, IUserLoginStore<TUser>, IUserSecurityStampStore<TUser>, IUserConfirmationStore<TUser>, IUserEmailStore<TUser>, IUserClaimStore<TUser>
+	public class UserStore<TUser> : IUserStore<TUser>, IUserPasswordStore<TUser>, IUserRoleStore<TUser>, IUserLoginStore<TUser>, IUserSecurityStampStore<TUser>, IUserConfirmationStore<TUser>, IUserEmailStore<TUser>, IUserClaimStore<TUser>, IQueryableUserStore<TUser>
 		where TUser : IdentityUser
 	{
 		private readonly IdentityContext _Context;
@@ -169,6 +169,11 @@
 		{
 			user.RemoveClaim(claim);
 			return Task.FromResult(0);
+		}
+
+		public IQueryable<TUser> Users
+		{
+			get { return _Context.Users.AsQueryable<TUser>(); }
 		}
 	}
 }

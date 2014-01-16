@@ -1,6 +1,5 @@
 ﻿namespace IntegrationTests
 {
-	using System;
 	using System.Linq;
 	using AspNet.Identity.MongoDB;
 	using Microsoft.AspNet.Identity;

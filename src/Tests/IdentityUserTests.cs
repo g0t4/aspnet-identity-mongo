@@ -1,5 +1,6 @@
 ﻿namespace Tests
 {
+	using System;
 	using AspNet.Identity.MongoDB;
 	using MongoDB.Bson;
 	using NUnit.Framework;
@@ -80,6 +81,31 @@
 			var document = user.ToBsonDocument();
 
 			Expect(document.Contains("Logins"), Is.False);
+		}
+
+		[Test]
+		public void SetConfirmed_NotConfirmed_SetsConfirmedAt()
+		{
+			var user = new IdentityUser();
+			var before = DateTime.UtcNow;
+
+			user.SetConfirmed(true);
+
+			var after = DateTime.UtcNow;
+			Expect(user.ConfirmedAtUtc, Is.InRange(before, after));
+		}
+
+		[Test]
+		public void SetConfirmed_AlreadyConfirmed_DoesNotUpdateConfirmedAt()
+		{
+			var user = new IdentityUser();
+			user.ConfirmedAtUtc = DateTime.UtcNow.AddDays(-1);
+			var before = DateTime.UtcNow;
+
+			user.SetConfirmed(true);
+
+			var after = DateTime.UtcNow;
+			Expect(user.ConfirmedAtUtc, Is.Not.InRange(before, after));
 		}
 	}
 }

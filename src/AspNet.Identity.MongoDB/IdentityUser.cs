@@ -1,5 +1,6 @@
 ﻿namespace AspNet.Identity.MongoDB
 {
+	using System;
 	using System.Collections.Generic;
 	using System.Linq;
 	using global::MongoDB.Bson;
@@ -20,7 +21,24 @@
 
 		public string UserName { get; set; }
 
-		public string SecurityStamp { get; set; }
+		public virtual string SecurityStamp { get; set; }
+
+		[BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
+		public virtual DateTime? ConfirmedAtUtc { get; set; }
+
+		public virtual void SetConfirmed(bool confirmed)
+		{
+			if (!confirmed)
+			{
+				ConfirmedAtUtc = null;
+				return;
+			}
+			if (ConfirmedAtUtc.HasValue)
+			{
+				return;
+			}
+			ConfirmedAtUtc = DateTime.UtcNow;
+		}
 
 		[BsonIgnoreIfNull]
 		public List<string> Roles { get; set; }

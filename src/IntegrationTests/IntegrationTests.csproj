@@ -60,6 +60,7 @@
     <Compile Include="IdentityContextTests.cs" />
     <Compile Include="IdentityUserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserConfirmationStoreTests.cs" />
     <Compile Include="UserIntegrationTestsBase.cs" />
     <Compile Include="UserLoginStoreTests.cs" />
     <Compile Include="UserPasswordStoreTests.cs" />

@@ -8,7 +8,7 @@
 	using global::MongoDB.Driver.Linq;
 	using Microsoft.AspNet.Identity;
 
-	public class UserStore<TUser> : IUserStore<TUser>, IUserPasswordStore<TUser>, IUserRoleStore<TUser>, IUserLoginStore<TUser>, IUserSecurityStampStore<TUser>
+	public class UserStore<TUser> : IUserStore<TUser>, IUserPasswordStore<TUser>, IUserRoleStore<TUser>, IUserLoginStore<TUser>, IUserSecurityStampStore<TUser>, IUserConfirmationStore<TUser>
 		where TUser : IdentityUser
 	{
 		private readonly IdentityContext _Context;
@@ -123,6 +123,17 @@
 		public Task<string> GetSecurityStampAsync(TUser user)
 		{
 			return Task.FromResult(user.SecurityStamp);
+		}
+
+		public Task<bool> IsConfirmedAsync(TUser user)
+		{
+			return Task.FromResult(user.ConfirmedAtUtc.HasValue);
+		}
+
+		public Task SetConfirmedAsync(TUser user, bool confirmed)
+		{
+			user.SetConfirmed(confirmed);
+			return Task.FromResult(0);
 		}
 	}
 }

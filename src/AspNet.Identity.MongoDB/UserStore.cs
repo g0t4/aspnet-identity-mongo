@@ -5,7 +5,7 @@
 	using global::MongoDB.Driver.Builders;
 	using Microsoft.AspNet.Identity;
 
-	public class UserStore<TUser> : IUserStore<TUser>
+	public class UserStore<TUser> : IUserStore<TUser>, IUserPasswordStore<TUser>
 		where TUser : IdentityUser
 	{
 		private readonly IdentityContext _Context;
@@ -46,6 +46,22 @@
 			// todo exception on duplicates? or better to enforce unique index to ensure this
 			var byName = Query<TUser>.EQ(u => u.UserName, userName);
 			return Task.Run(() => _Context.Users.FindOneAs<TUser>(byName));
+		}
+
+		public Task SetPasswordHashAsync(TUser user, string passwordHash)
+		{
+			user.PasswordHash = passwordHash;
+			return Task.FromResult(0);
+		}
+
+		public Task<string> GetPasswordHashAsync(TUser user)
+		{
+			return Task.FromResult(user.PasswordHash);
+		}
+
+		public Task<bool> HasPasswordAsync(TUser user)
+		{
+			return Task.FromResult(user.HasPassword());
 		}
 	}
 }

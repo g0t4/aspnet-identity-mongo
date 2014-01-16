@@ -23,12 +23,6 @@
 			Expect(savedUser.UserName, Is.EqualTo(user.UserName));
 		}
 
-		private UserManager<IdentityUser> GetUserManager()
-		{
-			var store = new UserStore<IdentityUser>(IdentityContext);
-			return new UserManager<IdentityUser>(store);
-		}
-
 		[Test]
 		public void FindByName_SavedUser_ReturnsUser()
 		{

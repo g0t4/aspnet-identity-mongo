@@ -1,6 +1,7 @@
 ﻿namespace IntegrationTests
 {
 	using AspNet.Identity.MongoDB;
+	using Microsoft.AspNet.Identity;
 	using MongoDB.Driver;
 	using NUnit.Framework;
 
@@ -19,6 +20,12 @@
 			IdentityContext = new IdentityContext(Users);
 
 			Database.DropCollection("users");
+		}
+
+		protected UserManager<IdentityUser> GetUserManager()
+		{
+			var store = new UserStore<IdentityUser>(IdentityContext);
+			return new UserManager<IdentityUser>(store);
 		}
 	}
 }

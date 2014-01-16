@@ -61,6 +61,7 @@
     <Compile Include="IdentityUserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserIntegrationTestsBase.cs" />
+    <Compile Include="UserPasswordStoreTests.cs" />
     <Compile Include="UserStoreTests.cs" />
   </ItemGroup>
   <ItemGroup>

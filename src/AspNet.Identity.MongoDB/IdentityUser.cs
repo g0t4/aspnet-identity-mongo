@@ -15,5 +15,13 @@
 		public string Id { get; private set; }
 
 		public string UserName { get; set; }
+
+		[BsonIgnoreIfNull]
+		public string PasswordHash { get; set; }
+
+		public bool HasPassword()
+		{
+			return false;
+		}
 	}
 }

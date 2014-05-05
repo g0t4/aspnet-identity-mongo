@@ -1,5 +1,6 @@
 ﻿namespace AspNet.Identity.MongoDB
 {
+	using System;
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Security.Claims;
@@ -33,6 +34,12 @@
 		public virtual bool PhoneNumberConfirmed { get; set; }
 
 		public virtual bool TwoFactorEnabled { get; set; }
+
+		public virtual DateTime? LockoutEndDateUtc { get; set; }
+
+		public virtual bool LockoutEnabled { get; set; }
+
+		public virtual int AccessFailedCount { get; set; }
 
 		[BsonIgnoreIfNull]
 		public List<string> Roles { get; set; }

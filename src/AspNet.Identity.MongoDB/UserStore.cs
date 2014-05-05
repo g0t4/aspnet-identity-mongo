@@ -1,5 +1,6 @@
 ﻿namespace AspNet.Identity.MongoDB
 {
+	using System;
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Security.Claims;
@@ -18,7 +19,8 @@
 		IUserClaimStore<TUser>,
 		IQueryableUserStore<TUser>,
 		IUserPhoneNumberStore<TUser>,
-		IUserTwoFactorStore<TUser, string>
+		IUserTwoFactorStore<TUser, string>,
+		IUserLockoutStore<TUser, string>
 		where TUser : IdentityUser
 	{
 		private readonly IdentityContext _Context;
@@ -40,6 +42,7 @@
 
 		public Task UpdateAsync(TUser user)
 		{
+			// todo should add an optimistic concurrency check
 			return Task.Run(() => _Context.Users.Save(user));
 		}
 
@@ -216,6 +219,44 @@
 		public Task<bool> GetTwoFactorEnabledAsync(TUser user)
 		{
 			return Task.FromResult(user.TwoFactorEnabled);
+		}
+
+		public Task<DateTimeOffset> GetLockoutEndDateAsync(TUser user)
+		{
+			return Task.FromResult(user.LockoutEndDateUtc ?? new DateTimeOffset());
+		}
+
+		public Task SetLockoutEndDateAsync(TUser user, DateTimeOffset lockoutEnd)
+		{
+			user.LockoutEndDateUtc = new DateTime(lockoutEnd.Ticks, DateTimeKind.Utc);
+			return Task.FromResult(0);
+		}
+
+		public Task<int> IncrementAccessFailedCountAsync(TUser user)
+		{
+			user.AccessFailedCount++;
+			return Task.FromResult(user.AccessFailedCount);
+		}
+
+		public Task ResetAccessFailedCountAsync(TUser user)
+		{
+			user.AccessFailedCount = 0;
+			return Task.FromResult(0);
+		}
+
+		public Task<int> GetAccessFailedCountAsync(TUser user)
+		{
+			return Task.FromResult(user.AccessFailedCount);
+		}
+
+		public Task<bool> GetLockoutEnabledAsync(TUser user)
+		{
+			return Task.FromResult(user.LockoutEnabled);
+		}
+
+		public Task SetLockoutEnabledAsync(TUser user, bool enabled)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

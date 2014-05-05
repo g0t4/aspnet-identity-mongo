@@ -66,6 +66,7 @@
     <Compile Include="UserIntegrationTestsBase.cs" />
     <Compile Include="UserLoginStoreTests.cs" />
     <Compile Include="UserPasswordStoreTests.cs" />
+    <Compile Include="UserPhoneNumberStoreTests.cs" />
     <Compile Include="UserRoleStoreTests.cs" />
     <Compile Include="UserSecurityStampStoreTests.cs" />
     <Compile Include="UserStoreTests.cs" />

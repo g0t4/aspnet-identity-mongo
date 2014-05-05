@@ -84,31 +84,6 @@
 		}
 
 		[Test]
-		public void SetConfirmed_NotConfirmed_SetsConfirmedAt()
-		{
-			var user = new IdentityUser();
-			var before = DateTime.UtcNow;
-
-			user.SetConfirmed(true);
-
-			var after = DateTime.UtcNow;
-			Expect(user.ConfirmedAtUtc, Is.InRange(before, after));
-		}
-
-		[Test]
-		public void SetConfirmed_AlreadyConfirmed_DoesNotUpdateConfirmedAt()
-		{
-			var user = new IdentityUser();
-			user.ConfirmedAtUtc = DateTime.UtcNow.AddDays(-1);
-			var before = DateTime.UtcNow;
-
-			user.SetConfirmed(true);
-
-			var after = DateTime.UtcNow;
-			Expect(user.ConfirmedAtUtc, Is.Not.InRange(before, after));
-		}
-
-		[Test]
 		public void Create_NewIdentityUser_ClaimsNotNull()
 		{
 			var user = new IdentityUser();

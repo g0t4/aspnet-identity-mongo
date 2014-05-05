@@ -1,9 +1,9 @@
 ﻿namespace AspNet.Identity.MongoDB
 {
-	using System;
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Security.Claims;
+	using System.Threading.Tasks;
 	using global::MongoDB.Bson;
 	using global::MongoDB.Bson.Serialization.Attributes;
 	using Microsoft.AspNet.Identity;
@@ -25,24 +25,13 @@
 
 		public virtual string SecurityStamp { get; set; }
 
-		[BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
-		public virtual DateTime? ConfirmedAtUtc { get; set; }
-
 		public virtual string Email { get; set; }
 
-		public virtual void SetConfirmed(bool confirmed)
-		{
-			if (!confirmed)
-			{
-				ConfirmedAtUtc = null;
-				return;
-			}
-			if (ConfirmedAtUtc.HasValue)
-			{
-				return;
-			}
-			ConfirmedAtUtc = DateTime.UtcNow;
-		}
+		public virtual bool EmailConfirmed { get; set; }
+
+		public virtual string PhoneNumber { get; set; }
+
+		public virtual bool PhoneNumberConfirmed { get; set; }
 
 		[BsonIgnoreIfNull]
 		public List<string> Roles { get; set; }

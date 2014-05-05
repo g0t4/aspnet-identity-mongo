@@ -16,7 +16,8 @@
 		IUserSecurityStampStore<TUser>,
 		IUserEmailStore<TUser>,
 		IUserClaimStore<TUser>,
-		IQueryableUserStore<TUser>
+		IQueryableUserStore<TUser>,
+		IUserPhoneNumberStore<TUser>
 		where TUser : IdentityUser
 	{
 		private readonly IdentityContext _Context;
@@ -135,12 +136,12 @@
 
 		public Task<bool> GetEmailConfirmedAsync(TUser user)
 		{
-			return Task.FromResult(user.ConfirmedAtUtc.HasValue);
+			return Task.FromResult(user.EmailConfirmed);
 		}
 
 		public Task SetEmailConfirmedAsync(TUser user, bool confirmed)
 		{
-			user.SetConfirmed(confirmed);
+			user.EmailConfirmed = confirmed;
 			return Task.FromResult(0);
 		}
 
@@ -181,6 +182,28 @@
 		public IQueryable<TUser> Users
 		{
 			get { return _Context.Users.AsQueryable<TUser>(); }
+		}
+
+		public Task SetPhoneNumberAsync(TUser user, string phoneNumber)
+		{
+			user.PhoneNumber = phoneNumber;
+			return Task.FromResult(0);
+		}
+
+		public Task<string> GetPhoneNumberAsync(TUser user)
+		{
+			return Task.FromResult(user.PhoneNumber);
+		}
+
+		public Task<bool> GetPhoneNumberConfirmedAsync(TUser user)
+		{
+			return Task.FromResult(user.PhoneNumberConfirmed);
+		}
+
+		public Task SetPhoneNumberConfirmedAsync(TUser user, bool confirmed)
+		{
+			user.PhoneNumberConfirmed = confirmed;
+			return Task.FromResult(0);
 		}
 	}
 }

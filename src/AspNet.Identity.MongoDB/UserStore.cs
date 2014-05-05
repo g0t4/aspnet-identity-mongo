@@ -9,7 +9,14 @@
 	using global::MongoDB.Driver.Linq;
 	using Microsoft.AspNet.Identity;
 
-	public class UserStore<TUser> : IUserStore<TUser>, IUserPasswordStore<TUser>, IUserRoleStore<TUser>, IUserLoginStore<TUser>, IUserSecurityStampStore<TUser>, IUserConfirmationStore<TUser>, IUserEmailStore<TUser>, IUserClaimStore<TUser>, IQueryableUserStore<TUser>
+	public class UserStore<TUser> : IUserStore<TUser>,
+		IUserPasswordStore<TUser>,
+		IUserRoleStore<TUser>,
+		IUserLoginStore<TUser>,
+		IUserSecurityStampStore<TUser>,
+		IUserEmailStore<TUser>,
+		IUserClaimStore<TUser>,
+		IQueryableUserStore<TUser>
 		where TUser : IdentityUser
 	{
 		private readonly IdentityContext _Context;
@@ -126,12 +133,12 @@
 			return Task.FromResult(user.SecurityStamp);
 		}
 
-		public Task<bool> IsConfirmedAsync(TUser user)
+		public Task<bool> GetEmailConfirmedAsync(TUser user)
 		{
 			return Task.FromResult(user.ConfirmedAtUtc.HasValue);
 		}
 
-		public Task SetConfirmedAsync(TUser user, bool confirmed)
+		public Task SetEmailConfirmedAsync(TUser user, bool confirmed)
 		{
 			user.SetConfirmed(confirmed);
 			return Task.FromResult(0);

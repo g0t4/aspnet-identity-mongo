@@ -43,5 +43,48 @@
 
 			Expect(manager.FindByEmail("email"), Is.Not.Null);
 		}
+
+		[Test]
+		public void Create_NewUser_IsNotEmailConfirmed()
+		{
+			var manager = GetUserManager();
+			var user = new IdentityUser {UserName = "bob"};
+			manager.Create(user);
+
+			var isConfirmed = manager.IsEmailConfirmed(user.Id);
+
+			Expect(isConfirmed, Is.False);
+		}
+
+		[Test]
+		public void SetEmailConfirmed_IsConfirmed()
+		{
+			var manager = GetUserManager();
+			var user = new IdentityUser {UserName = "bob"};
+			manager.Create(user);
+			manager.UserTokenProvider = new EmailTokenProvider<IdentityUser>();
+			var token = manager.GenerateEmailConfirmationToken(user.Id);
+
+			manager.ConfirmEmail(user.Id, token);
+
+			var isConfirmed = manager.IsEmailConfirmed(user.Id);
+			Expect(isConfirmed);
+		}
+
+		[Test]
+		public void ChangeEmail_AfterConfirmedOriginalEmail_NotEmailConfirmed()
+		{
+			var manager = GetUserManager();
+			var user = new IdentityUser {UserName = "bob"};
+			manager.Create(user);
+			manager.UserTokenProvider = new EmailTokenProvider<IdentityUser>();
+			var token = manager.GenerateEmailConfirmationToken(user.Id);
+			manager.ConfirmEmail(user.Id, token);
+
+			manager.SetEmail(user.Id, "new@email.com");
+
+			var isConfirmed = manager.IsEmailConfirmed(user.Id);
+			Expect(isConfirmed, Is.False);
+		}
 	}
 }

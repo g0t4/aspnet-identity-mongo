@@ -70,6 +70,7 @@
     <Compile Include="UserRoleStoreTests.cs" />
     <Compile Include="UserSecurityStampStoreTests.cs" />
     <Compile Include="UserStoreTests.cs" />
+    <Compile Include="UserTwoFactorStoreTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

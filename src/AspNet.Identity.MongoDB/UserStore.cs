@@ -17,7 +17,8 @@
 		IUserEmailStore<TUser>,
 		IUserClaimStore<TUser>,
 		IQueryableUserStore<TUser>,
-		IUserPhoneNumberStore<TUser>
+		IUserPhoneNumberStore<TUser>,
+		IUserTwoFactorStore<TUser, string>
 		where TUser : IdentityUser
 	{
 		private readonly IdentityContext _Context;
@@ -204,6 +205,17 @@
 		{
 			user.PhoneNumberConfirmed = confirmed;
 			return Task.FromResult(0);
+		}
+
+		public Task SetTwoFactorEnabledAsync(TUser user, bool enabled)
+		{
+			user.TwoFactorEnabled = enabled;
+			return Task.FromResult(0);
+		}
+
+		public Task<bool> GetTwoFactorEnabledAsync(TUser user)
+		{
+			return Task.FromResult(user.TwoFactorEnabled);
 		}
 	}
 }

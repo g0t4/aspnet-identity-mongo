@@ -3,7 +3,6 @@
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Security.Claims;
-	using System.Threading.Tasks;
 	using global::MongoDB.Bson;
 	using global::MongoDB.Bson.Serialization.Attributes;
 	using Microsoft.AspNet.Identity;
@@ -32,6 +31,8 @@
 		public virtual string PhoneNumber { get; set; }
 
 		public virtual bool PhoneNumberConfirmed { get; set; }
+
+		public virtual bool TwoFactorEnabled { get; set; }
 
 		[BsonIgnoreIfNull]
 		public List<string> Roles { get; set; }

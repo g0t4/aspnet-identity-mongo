@@ -10,7 +10,7 @@
     <iconUrl>https://github.com/g0t4/aspnet-identity-mongo</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A mongodb provider for the new ASP.NET Identity framework. My aim is to ensure this project is well tested and configurable.</description>
-    <releaseNotes>Adding IUserSecurityStampStore, IUserConfirmationStore, IUserEmailStore, IUserClaimStore and IQueryableUserStore interfaces.</releaseNotes>
+    <releaseNotes>Updating to Identity 2.0 RTM</releaseNotes>
     <copyright>MIT</copyright>
     <tags>mongo mongodb aspnet identity</tags>
   </metadata>

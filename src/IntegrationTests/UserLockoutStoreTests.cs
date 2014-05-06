@@ -25,7 +25,7 @@
 		public void IncrementAccessFailedCount_ReturnsNewCount()
 		{
 			var store = new UserStore<IdentityUser>(null);
-			var user = new IdentityUser { UserName = "bob" };
+			var user = new IdentityUser {UserName = "bob"};
 
 			var count = store.IncrementAccessFailedCountAsync(user);
 
@@ -72,6 +72,20 @@
 
 			var lockoutEndDate = manager.GetLockoutEndDate(user.Id);
 			Expect(lockoutEndDate.Subtract(DateTime.UtcNow).TotalHours, Is.GreaterThan(0.9).And.LessThan(1.1));
+		}
+
+		[Test]
+		public void SetLockoutEnabled()
+		{
+			var manager = GetUserManager();
+			var user = new IdentityUser {UserName = "bob"};
+			manager.Create(user);
+
+			manager.SetLockoutEnabled(user.Id, true);
+			Expect(manager.GetLockoutEnabled(user.Id));
+
+			manager.SetLockoutEnabled(user.Id, false);
+			Expect(manager.GetLockoutEnabled(user.Id), Is.False);
 		}
 	}
 }

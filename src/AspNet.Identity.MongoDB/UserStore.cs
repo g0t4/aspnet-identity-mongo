@@ -256,7 +256,8 @@
 
 		public Task SetLockoutEnabledAsync(TUser user, bool enabled)
 		{
-			throw new NotImplementedException();
+			user.LockoutEnabled = enabled;
+			return Task.FromResult(0);
 		}
 	}
 }

@@ -10,12 +10,12 @@
 		[Test]
 		public void Create_NoIndexOnUserName_AddsUniqueIndexOnUserName()
 		{
-			var collectionName = "userindextest";
-			Database.DropCollection(collectionName);
-			var collection = Database.GetCollection(collectionName);
-			new IdentityContext(collection);
+			var userCollectionName = "userindextest";
+			Database.DropCollection(userCollectionName);
+			var users = Database.GetCollection(userCollectionName);
+			new IdentityContext(users);
 
-			var index = collection.GetIndexes()
+			var index = users.GetIndexes()
 				.Where(i => i.IsUnique)
 				.Where(i => i.Key.Count() == 1)
 				.First(i => i.Key.Contains("UserName"));
@@ -25,15 +25,31 @@
 		[Test]
 		public void CreateEmailUniqueIndex_NoIndexOnEmail_AddsUniqueIndexOnEmail()
 		{
-			var collectionName = "userindextest";
-			Database.DropCollection(collectionName);
-			var collection = Database.GetCollection(collectionName);
-			new IdentityContext(collection).EnsureUniqueIndexOnEmail();
+			var userCollectionName = "userindextest";
+			Database.DropCollection(userCollectionName);
+			var users = Database.GetCollection(userCollectionName);
+			new IdentityContext(users).EnsureUniqueIndexOnEmail();
 
-			var index = collection.GetIndexes()
+			var index = users.GetIndexes()
 				.Where(i => i.IsUnique)
 				.Where(i => i.Key.Count() == 1)
 				.First(i => i.Key.Contains("Email"));
+			Expect(index.Key.Count(), Is.EqualTo(1));
+		}
+
+		[Test]
+		public void Create_NoIndexOnRoleName_AddsUniqueIndexOnRoleName()
+		{
+			var roleCollectionName = "roleindextest";
+			Database.DropCollection(roleCollectionName);
+			var roles = Database.GetCollection(roleCollectionName);
+			var users = Database.GetCollection("users");
+			new IdentityContext(users, roles);
+
+			var index = roles.GetIndexes()
+				.Where(i => i.IsUnique)
+				.Where(i => i.Key.Count() == 1)
+				.First(i => i.Key.Contains("Name"));
 			Expect(index.Key.Count(), Is.EqualTo(1));
 		}
 	}

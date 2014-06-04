@@ -6,11 +6,17 @@
 	public class IdentityContext
 	{
 		public MongoCollection Users { get; private set; }
+		public MongoCollection Roles { get; private set; }
 
 		public IdentityContext(MongoCollection users)
 		{
 			Users = users;
 			EnsureUniqueIndexOnUserName(users);
+		}
+
+		public IdentityContext(MongoCollection users, MongoCollection roles) : this(users)
+		{
+			Roles = roles;
 		}
 
 		private void EnsureUniqueIndexOnUserName(MongoCollection users)

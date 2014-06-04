@@ -52,7 +52,7 @@
 		{
 			var userId = ObjectId.GenerateNewId().ToString();
 			var user = new IdentityUser {UserName = "name"};
-			user.SetUserId(userId);
+			user.SetId(userId);
 			var manager = GetUserManager();
 			manager.Create(user);
 

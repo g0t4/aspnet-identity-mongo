@@ -12,7 +12,7 @@
 		public void Insert_NoId_SetsId()
 		{
 			var user = new IdentityUser();
-			user.SetUserId(null);
+			user.SetId(null);
 
 			Users.Insert(user);
 

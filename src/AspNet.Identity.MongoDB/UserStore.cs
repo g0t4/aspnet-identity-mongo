@@ -48,8 +48,8 @@
 
 		public Task DeleteAsync(TUser user)
 		{
-			var remove = Query<TUser>.EQ(u => u.Id, user.Id);
-			return Task.Run(() => _Context.Users.Remove(remove));
+			var queryById = Query<TUser>.EQ(u => u.Id, user.Id);
+			return Task.Run(() => _Context.Users.Remove(queryById));
 		}
 
 		public Task<TUser> FindByIdAsync(string userId)
@@ -60,8 +60,8 @@
 		public Task<TUser> FindByNameAsync(string userName)
 		{
 			// todo exception on duplicates? or better to enforce unique index to ensure this
-			var byName = Query<TUser>.EQ(u => u.UserName, userName);
-			return Task.Run(() => _Context.Users.FindOneAs<TUser>(byName));
+			var queryByName = Query<TUser>.EQ(u => u.UserName, userName);
+			return Task.Run(() => _Context.Users.FindOneAs<TUser>(queryByName));
 		}
 
 		public Task SetPasswordHashAsync(TUser user, string passwordHash)

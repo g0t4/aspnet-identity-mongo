@@ -5,8 +5,8 @@
 
 	public class IdentityContext
 	{
-		public MongoCollection Users { get; private set; }
-		public MongoCollection Roles { get; private set; }
+		public MongoCollection Users { get; set; }
+		public MongoCollection Roles { get; set; }
 
 		public IdentityContext(MongoCollection users)
 		{

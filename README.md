@@ -13,11 +13,15 @@ A mongodb provider for the new ASP.NET Identity framework. My aim is to ensure t
 	var store = new UserStore<IdentityUser>(context);
 	var manager = new UserManager<IdentityUser>(store);
 
+OR
+
+a sample [aspnet-identity-mongo-sample](https://github.com/g0t4/aspnet-identity-mongo-sample) based on [Microsoft ASP.NET Identity Samples](http://www.nuget.org/packages/Microsoft.AspNet.Identity.Samples).
+
 ## Installation
 
 via nuget:
 
-	Install-Package AspNet.Identity.MongoDB -Pre
+	Install-Package AspNet.Identity.MongoDB
 
 ## Building and Testing
 
@@ -41,3 +45,4 @@ To package:
 I'm writing about my design decisions on my blog:
 
 - [Building a mongodb provider for the new ASP.NET Identity framework - Part 1](http://devblog.wesmcclure.com/posts/building-a-mongodb-provider-for-the-new-asp.net-identity-framework-part-1)
+- [Building a mongodb provider for the new ASP.NET Identity framework - Part 2 RoleStore And Sample](http://devblog.wesmcclure.com/posts/building-a-mongodb-provider-for-the-new-asp.net-identity-framework-part-2-rolestore-and-sample)

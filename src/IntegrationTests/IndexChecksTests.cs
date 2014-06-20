@@ -5,15 +5,16 @@
 	using NUnit.Framework;
 
 	[TestFixture]
-	public class IdentityContextTests : UserIntegrationTestsBase
+	public class IndexChecksTests : UserIntegrationTestsBase
 	{
 		[Test]
-		public void Create_NoIndexOnUserName_AddsUniqueIndexOnUserName()
+		public void EnsureUniqueIndexOnUserName_NoIndexOnUserName_AddsUniqueIndexOnUserName()
 		{
 			var userCollectionName = "userindextest";
 			Database.DropCollection(userCollectionName);
 			var users = Database.GetCollection(userCollectionName);
-			new IdentityContext(users);
+
+			IndexChecks.EnsureUniqueIndexOnUserName(users);
 
 			var index = users.GetIndexes()
 				.Where(i => i.IsUnique)
@@ -23,12 +24,13 @@
 		}
 
 		[Test]
-		public void CreateEmailUniqueIndex_NoIndexOnEmail_AddsUniqueIndexOnEmail()
+		public void EnsureEmailUniqueIndex_NoIndexOnEmail_AddsUniqueIndexOnEmail()
 		{
 			var userCollectionName = "userindextest";
 			Database.DropCollection(userCollectionName);
 			var users = Database.GetCollection(userCollectionName);
-			new IdentityContext(users).EnsureUniqueIndexOnEmail();
+
+			IndexChecks.EnsureUniqueIndexOnEmail(users);
 
 			var index = users.GetIndexes()
 				.Where(i => i.IsUnique)
@@ -38,13 +40,13 @@
 		}
 
 		[Test]
-		public void Create_NoIndexOnRoleName_AddsUniqueIndexOnRoleName()
+		public void EnsureUniqueIndexOnRoleName_NoIndexOnRoleName_AddsUniqueIndexOnRoleName()
 		{
 			var roleCollectionName = "roleindextest";
 			Database.DropCollection(roleCollectionName);
 			var roles = Database.GetCollection(roleCollectionName);
-			var users = Database.GetCollection("users");
-			new IdentityContext(users, roles);
+
+			IndexChecks.EnsureUniqueIndexOnRoleName(roles);
 
 			var index = roles.GetIndexes()
 				.Where(i => i.IsUnique)

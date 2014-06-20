@@ -59,7 +59,7 @@
   <ItemGroup>
     <Compile Include="EnsureWeCanExtendIdentityUserTests.cs" />
     <Compile Include="EnsureWeCanExtendIdentityRoleTests.cs" />
-    <Compile Include="IdentityContextTests.cs" />
+    <Compile Include="IndexChecksTests.cs" />
     <Compile Include="IdentityUserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoleStoreTests.cs" />

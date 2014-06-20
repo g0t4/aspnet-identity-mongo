@@ -10,7 +10,7 @@
     <iconUrl>https://github.com/g0t4/aspnet-identity-mongo</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A mongodb provider for the new ASP.NET Identity framework. My aim is to ensure this project is well tested and configurable.</description>
-    <releaseNotes>Updating to Identity 2.0 RTM</releaseNotes>
+    <releaseNotes>Remove automatic index creation from constructor of IdentityContext, make this optional for consumers to call as desired in the startup, or otherwise, of their application.</releaseNotes>
     <copyright>MIT</copyright>
     <tags>mongo mongodb aspnet identity</tags>
   </metadata>

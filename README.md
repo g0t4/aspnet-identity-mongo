@@ -13,6 +13,17 @@ A mongodb provider for the new ASP.NET Identity framework. My aim is to ensure t
 	var store = new UserStore<IdentityUser>(context);
 	var manager = new UserManager<IdentityUser>(store);
 
+	// if you want roles too:
+	var roles = database.GetCollection<IdentityRole>("roles");
+	var context = new IdentityContext(users, roles);
+
+	// at some point in application startup it would be good to ensure unique indexes on user and role names exist, these used to be a part of IdentityContext, but that caused issues for people that didn't want the indexes created at the time the IdentityContext is created. They're now just part of the static IndexChecks:
+
+	IndexChecks.EnsureUniqueIndexOnUserName(users);
+	IndexChecks.EnsureUniqueIndexOnEmail(users);
+
+	IndexChecks.EnsureUniqueIndexOnRoleName(roles);
+
 OR
 
 a sample [aspnet-identity-mongo-sample](https://github.com/g0t4/aspnet-identity-mongo-sample) based on [Microsoft ASP.NET Identity Samples](http://www.nuget.org/packages/Microsoft.AspNet.Identity.Samples).

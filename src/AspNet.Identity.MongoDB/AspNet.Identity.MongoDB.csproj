@@ -56,6 +56,7 @@
     <Compile Include="IdentityRole.cs" />
     <Compile Include="IdentityUser.cs" />
     <Compile Include="IdentityUserClaim.cs" />
+    <Compile Include="IndexChecks.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoleStore.cs" />
     <Compile Include="UserStore.cs" />

@@ -21,12 +21,12 @@
 		[Test]
 		public void ToSecurityClaim_SetsTypeAndValue()
 		{
-			var userClaim = new IdentityUserClaim {Type = "type", Value = "value"};
+			var userClaim = new IdentityUserClaim {Type = "t", Value = "v"};
 
 			var claim = userClaim.ToSecurityClaim();
 
-			Expect(claim.Type, Is.EqualTo("type"));
-			Expect(claim.Value, Is.EqualTo("value"));
+			Expect(claim.Type, Is.EqualTo("t"));
+			Expect(claim.Value, Is.EqualTo("v"));
 		}
 	}
 }

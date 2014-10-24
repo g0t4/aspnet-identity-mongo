@@ -19,7 +19,7 @@
 
 		public Claim ToSecurityClaim()
 		{
-			return new Claim("type", "value");
+			return new Claim(Type, Value);
 		}
 	}
 }

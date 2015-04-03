@@ -3,56 +3,62 @@
 	using System.Linq;
 	using AspNet.Identity.MongoDB;
 	using NUnit.Framework;
+    using MongoDB.Bson;
+    using MongoDB.Driver;
+    using System.Threading.Tasks;
 
 	[TestFixture]
 	public class IndexChecksTests : UserIntegrationTestsBase
 	{
 		[Test]
-		public void EnsureUniqueIndexOnUserName_NoIndexOnUserName_AddsUniqueIndexOnUserName()
+		public async Task EnsureUniqueIndexOnUserName_NoIndexOnUserName_AddsUniqueIndexOnUserName()
 		{
 			var userCollectionName = "userindextest";
-			Database.DropCollection(userCollectionName);
-			var users = Database.GetCollection(userCollectionName);
+			await Database.DropCollectionAsync(userCollectionName);
+			var users = Database.GetCollection<IdentityUser>(userCollectionName);
 
-			IndexChecks.EnsureUniqueIndexOnUserName(users);
+			IndexChecks<IdentityUser, IdentityRole>.EnsureUniqueIndexOnUserName(users);
 
-			var index = users.GetIndexes()
-				.Where(i => i.IsUnique)
-				.Where(i => i.Key.Count() == 1)
-				.First(i => i.Key.Contains("UserName"));
-			Expect(index.Key.Count(), Is.EqualTo(1));
+            using (var cursor = await users.Indexes.ListAsync())
+            {
+                var indexes = await cursor.ToListAsync();
+                var index = indexes.Where(i => i.Contains("unique") && i["unique"] == true).Where(i => i["name"].AsString.Contains("UserName"));
+                Expect(index.Count(), Is.EqualTo(1));
+            }
 		}
 
 		[Test]
-		public void EnsureEmailUniqueIndex_NoIndexOnEmail_AddsUniqueIndexOnEmail()
+        public async Task EnsureEmailUniqueIndex_NoIndexOnEmail_AddsUniqueIndexOnEmail()
 		{
 			var userCollectionName = "userindextest";
-			Database.DropCollection(userCollectionName);
-			var users = Database.GetCollection(userCollectionName);
+			await Database.DropCollectionAsync(userCollectionName);
+			var users = Database.GetCollection<IdentityUser>(userCollectionName);
 
-			IndexChecks.EnsureUniqueIndexOnEmail(users);
+			IndexChecks<IdentityUser, IdentityRole>.EnsureUniqueIndexOnEmail(users);
 
-			var index = users.GetIndexes()
-				.Where(i => i.IsUnique)
-				.Where(i => i.Key.Count() == 1)
-				.First(i => i.Key.Contains("Email"));
-			Expect(index.Key.Count(), Is.EqualTo(1));
+            using (var cursor = await users.Indexes.ListAsync())
+            {
+                var indexes = await cursor.ToListAsync();
+                var index = indexes.Where(i => i.Contains("unique") && i["unique"] == true).Where(i => i["name"].AsString.Contains("Email"));
+                Expect(index.Count(), Is.EqualTo(1));
+            }
 		}
 
 		[Test]
-		public void EnsureUniqueIndexOnRoleName_NoIndexOnRoleName_AddsUniqueIndexOnRoleName()
+		public async Task EnsureUniqueIndexOnRoleName_NoIndexOnRoleName_AddsUniqueIndexOnRoleName()
 		{
 			var roleCollectionName = "roleindextest";
-			Database.DropCollection(roleCollectionName);
-			var roles = Database.GetCollection(roleCollectionName);
+			await Database.DropCollectionAsync(roleCollectionName);
+			var roles = Database.GetCollection<IdentityRole>(roleCollectionName);
 
-			IndexChecks.EnsureUniqueIndexOnRoleName(roles);
+            IndexChecks<IdentityUser, IdentityRole>.EnsureUniqueIndexOnRoleName(roles);
 
-			var index = roles.GetIndexes()
-				.Where(i => i.IsUnique)
-				.Where(i => i.Key.Count() == 1)
-				.First(i => i.Key.Contains("Name"));
-			Expect(index.Key.Count(), Is.EqualTo(1));
+            using (var cursor = await roles.Indexes.ListAsync())
+            {
+                var indexes = await cursor.ToListAsync();
+                var index = indexes.Where(i => i.Contains("unique") && i["unique"] == true).Where(i => i["name"].AsString.Contains("Name"));
+                Expect(index.Count(), Is.EqualTo(1));
+            }
 		}
 	}
 }

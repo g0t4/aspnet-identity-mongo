@@ -1,31 +1,34 @@
 ﻿namespace AspNet.Identity.MongoDB
 {
-	using System;
-	using global::MongoDB.Driver;
+    using global::MongoDB.Driver;
+    using System;
 
-	public class IdentityContext
-	{
-		public MongoCollection Users { get; set; }
-		public MongoCollection Roles { get; set; }
+    public class IdentityContext<TUsers, TRole>
+        where TUsers : IdentityUser
+        where TRole : IdentityRole
+    {
+        public IMongoCollection<TUsers> Users { get; set; }
+        public IMongoCollection<TRole> Roles { get; set; }
 
-		public IdentityContext()
-		{
-		}
+        public IdentityContext()
+        {
+        }
 
-		public IdentityContext(MongoCollection users)
-		{
-			Users = users;
-		}
+        public IdentityContext(IMongoCollection<TUsers> users)
+        {
+            Users = users;
+        }
 
-		public IdentityContext(MongoCollection users, MongoCollection roles) : this(users)
-		{
-			Roles = roles;
-		}
+        public IdentityContext(IMongoCollection<TUsers> users, IMongoCollection<TRole> roles)
+            : this(users)
+        {
+            Roles = roles;
+        }
 
-		[Obsolete("Use IndexChecks.EnsureUniqueIndexOnEmail")]
-		public void EnsureUniqueIndexOnEmail()
-		{
-			IndexChecks.EnsureUniqueIndexOnEmail(Users);
-		}
-	}
+        [Obsolete("Use IndexChecks.EnsureUniqueIndexOnEmail")]
+        public void EnsureUniqueIndexOnEmail()
+        {
+            IndexChecks<TUsers, TRole>.EnsureUniqueIndexOnEmail(Users);
+        }
+    }
 }

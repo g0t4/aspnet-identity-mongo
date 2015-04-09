@@ -25,29 +25,29 @@
             // no need to dispose of anything, mongodb handles connection pooling automatically
         }
 
-        public virtual Task CreateAsync(TRole role)
+        public async virtual Task CreateAsync(TRole role)
         {
-            return Task.Run(() => _Roles.InsertOneAsync(role));
+            await _Roles.InsertOneAsync(role);
         }
 
-        public virtual Task UpdateAsync(TRole role)
+        public async virtual Task UpdateAsync(TRole role)
         {
-            return Task.Run(() => _Roles.ReplaceOneAsync(r => r.Id == role.Id, role));
+            await _Roles.ReplaceOneAsync(r => r.Id == role.Id, role);
         }
 
-        public virtual Task DeleteAsync(TRole role)
+        public async virtual Task DeleteAsync(TRole role)
         {
-            return Task.Run(() => _Roles.DeleteOneAsync(r => r.Id == role.Id));
+            await _Roles.DeleteOneAsync(r => r.Id == role.Id);
         }
 
-        public virtual Task<TRole> FindByIdAsync(string roleId)
+        public async virtual Task<TRole> FindByIdAsync(string roleId)
         {
-            return Task.Run(() => _Roles.Find(r => r.Id == roleId).FirstOrDefaultAsync());
+            return await _Roles.Find(r => r.Id == roleId).FirstOrDefaultAsync();
         }
 
-        public virtual Task<TRole> FindByNameAsync(string roleName)
+        public async virtual Task<TRole> FindByNameAsync(string roleName)
         {
-            return Task.Run(() => _Roles.Find(r => r.Name == roleName).FirstOrDefaultAsync());
+            return await _Roles.Find(r => r.Name == roleName).FirstOrDefaultAsync();
         }
     }
 }

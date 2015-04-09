@@ -32,31 +32,31 @@
             // no need to dispose of anything, mongodb handles connection pooling automatically
         }
 
-        public virtual Task CreateAsync(TUser user)
+        public async virtual Task CreateAsync(TUser user)
         {
-            return Task.Run(() => Users.InsertOneAsync(user));
+            await Users.InsertOneAsync(user);
         }
 
-        public virtual Task UpdateAsync(TUser user)
+        public async virtual Task UpdateAsync(TUser user)
         {
             // todo should add an optimistic concurrency check
-            return Task.Run(() => Users.ReplaceOneAsync(u => u.Id == user.Id, user));
+            await Users.ReplaceOneAsync(u => u.Id == user.Id, user);
         }
 
-        public virtual Task DeleteAsync(TUser user)
+        public async virtual Task DeleteAsync(TUser user)
         {
-            return Task.Run(() => Users.DeleteOneAsync(r => r.Id == user.Id));
+            await Users.DeleteOneAsync(r => r.Id == user.Id);
         }
 
-        public virtual Task<TUser> FindByIdAsync(string userId)
+        public async virtual Task<TUser> FindByIdAsync(string userId)
         {
-            return Task.Run(() => Users.Find(u => u.Id == userId).FirstOrDefaultAsync());
+            return await Users.Find(u => u.Id == userId).FirstOrDefaultAsync();
         }
 
-        public virtual Task<TUser> FindByNameAsync(string userName)
+        public async virtual Task<TUser> FindByNameAsync(string userName)
         {
             // todo exception on duplicates? or better to enforce unique index to ensure this
-            return Task.Run(() => Users.Find(u => u.UserName == userName).FirstOrDefaultAsync());
+            return await Users.Find(u => u.UserName == userName).FirstOrDefaultAsync();
         }
 
         public virtual Task SetPasswordHashAsync(TUser user, string passwordHash)
@@ -114,9 +114,9 @@
             return Task.FromResult((IList<UserLoginInfo>)user.Logins);
         }
 
-        public virtual Task<TUser> FindAsync(UserLoginInfo login)
+        public async virtual Task<TUser> FindAsync(UserLoginInfo login)
         {
-            return Task.Run(() => Users.Find(u => u.Logins.Any(l => l.LoginProvider == login.LoginProvider && l.ProviderKey == login.ProviderKey)).FirstOrDefaultAsync());
+            return await Users.Find(u => u.Logins.Any(l => l.LoginProvider == login.LoginProvider && l.ProviderKey == login.ProviderKey)).FirstOrDefaultAsync();
         }
 
         public virtual Task SetSecurityStampAsync(TUser user, string stamp)
@@ -152,10 +152,10 @@
             return Task.FromResult(user.Email);
         }
 
-        public virtual Task<TUser> FindByEmailAsync(string email)
+        public async virtual Task<TUser> FindByEmailAsync(string email)
         {
             // todo what if a user can have multiple accounts with the same email?
-            return Task.Run(() => Users.Find(u => u.Email == email).FirstOrDefaultAsync());
+            return await Users.Find(u => u.Email == email).FirstOrDefaultAsync();
         }
 
         public virtual Task<IList<Claim>> GetClaimsAsync(TUser user)

@@ -1,11 +1,14 @@
 ﻿namespace IntegrationTests
 {
 	using System.Linq;
+	using System.Runtime.CompilerServices;
 	using AspNet.Identity.MongoDB;
 	using Microsoft.AspNet.Identity;
 	using MongoDB.Bson;
+    using MongoDB.Driver;
 	using NUnit.Framework;
 	using Tests;
+    using System.Threading.Tasks;
 
 	[TestFixture]
 	public class RoleStoreTests : UserIntegrationTestsBase
@@ -19,7 +22,7 @@
 
 			manager.Create(role);
 
-			var savedRole = Roles.FindAll().Single();
+            var savedRole = Roles.Find(new BsonDocument()).FirstOrDefaultAsync().Result;
 			Expect(savedRole.Name, Is.EqualTo(roleName));
 		}
 
@@ -53,16 +56,16 @@
 		}
 
 		[Test]
-		public void Delete_ExistingRole_Removes()
+		public async Task Delete_ExistingRole_Removes()
 		{
 			var role = new IdentityRole {Name = "name"};
 			var manager = GetRoleManager();
 			manager.Create(role);
-			Expect(Roles.FindAll(), Is.Not.Empty);
+			Expect(await Roles.Find(new BsonDocument()).CountAsync(), Is.GreaterThan(0));
 
 			manager.Delete(role);
 
-			Expect(Roles.FindAll(), Is.Empty);
+            Expect(await Roles.Find(new BsonDocument()).CountAsync(), Is.EqualTo(0));
 		}
 
 		[Test]
@@ -76,7 +79,7 @@
 
 			manager.Update(savedRole);
 
-			var changedRole = Roles.FindAll().Single();
+			var changedRole = Roles.Find(new BsonDocument()).FirstOrDefaultAsync().Result;
 			Expect(changedRole, Is.Not.Null);
 			Expect(changedRole.Name, Is.EqualTo("newname"));
 		}

@@ -19,8 +19,8 @@
 		[SetUp]
 		public void BeforeEachTestAfterBase()
 		{
-			var context = new IdentityContext(Users, Roles);
-			var roleStore = new RoleStore<ExtendedIdentityRole>(context);
+			var roles = DatabaseNewApi.GetCollection<ExtendedIdentityRole>("roles");
+			var roleStore = new RoleStore<ExtendedIdentityRole>(roles);
 			_Manager = new RoleManager<ExtendedIdentityRole>(roleStore);
 			_Role = new ExtendedIdentityRole
 			{

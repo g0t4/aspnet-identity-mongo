@@ -19,8 +19,8 @@
 		[SetUp]
 		public void BeforeEachTestAfterBase()
 		{
-			var context = new IdentityContext(Users);
-			var userStore = new UserStore<ExtendedIdentityUser>(context);
+			var users = DatabaseNewApi.GetCollection<ExtendedIdentityUser>("users");
+			var userStore = new UserStore<ExtendedIdentityUser>(users);
 			_Manager = new UserManager<ExtendedIdentityUser>(userStore);
 			_User = new ExtendedIdentityUser
 			{

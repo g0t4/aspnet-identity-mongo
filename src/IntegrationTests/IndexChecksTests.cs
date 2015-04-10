@@ -12,10 +12,11 @@
 		{
 			var userCollectionName = "userindextest";
 			Database.DropCollection(userCollectionName);
+			var usersNewApi = DatabaseNewApi.GetCollection<IdentityUser>(userCollectionName);
+
+			IndexChecks.EnsureUniqueIndexOnUserName(usersNewApi);
+
 			var users = Database.GetCollection(userCollectionName);
-
-			IndexChecks.EnsureUniqueIndexOnUserName(users);
-
 			var index = users.GetIndexes()
 				.Where(i => i.IsUnique)
 				.Where(i => i.Key.Count() == 1)
@@ -28,10 +29,11 @@
 		{
 			var userCollectionName = "userindextest";
 			Database.DropCollection(userCollectionName);
+			var usersNewApi = DatabaseNewApi.GetCollection<IdentityUser>(userCollectionName);
+
+			IndexChecks.EnsureUniqueIndexOnEmail(usersNewApi);
+
 			var users = Database.GetCollection(userCollectionName);
-
-			IndexChecks.EnsureUniqueIndexOnEmail(users);
-
 			var index = users.GetIndexes()
 				.Where(i => i.IsUnique)
 				.Where(i => i.Key.Count() == 1)
@@ -44,10 +46,11 @@
 		{
 			var roleCollectionName = "roleindextest";
 			Database.DropCollection(roleCollectionName);
+			var rolesNewApi = DatabaseNewApi.GetCollection<IdentityRole>(roleCollectionName);
+
+			IndexChecks.EnsureUniqueIndexOnRoleName(rolesNewApi);
+
 			var roles = Database.GetCollection(roleCollectionName);
-
-			IndexChecks.EnsureUniqueIndexOnRoleName(roles);
-
 			var index = roles.GetIndexes()
 				.Where(i => i.IsUnique)
 				.Where(i => i.Key.Count() == 1)

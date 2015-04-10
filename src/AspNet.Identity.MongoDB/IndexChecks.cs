@@ -1,29 +1,31 @@
 ﻿namespace AspNet.Identity.MongoDB
 {
 	using global::MongoDB.Driver;
-	using global::MongoDB.Driver.Builders;
 
 	public class IndexChecks
 	{
-		public static void EnsureUniqueIndexOnUserName(MongoCollection users)
+		public static void EnsureUniqueIndexOnUserName<TUser>(IMongoCollection<TUser> users)
+			where TUser : IdentityUser
 		{
-			var userName = new IndexKeysBuilder<IdentityUser>().Ascending(t => t.UserName);
-			var unique = new IndexOptionsBuilder().SetUnique(true);
-			users.CreateIndex(userName, unique);
+			var userName = Builders<TUser>.IndexKeys.Ascending(t => t.UserName);
+			var unique = new CreateIndexOptions {Unique = true};
+			users.Indexes.CreateOneAsync(userName, unique);
 		}
 
-		public static void EnsureUniqueIndexOnRoleName(MongoCollection roles)
+		public static void EnsureUniqueIndexOnRoleName<TRole>(IMongoCollection<TRole> roles)
+			where TRole : IdentityRole
 		{
-			var roleName = new IndexKeysBuilder<IdentityRole>().Ascending(t => t.Name);
-			var unique = new IndexOptionsBuilder().SetUnique(true);
-			roles.CreateIndex(roleName, unique);
+			var roleName = Builders<TRole>.IndexKeys.Ascending(t => t.Name);
+			var unique = new CreateIndexOptions {Unique = true};
+			roles.Indexes.CreateOneAsync(roleName, unique);
 		}
 
-		public static void EnsureUniqueIndexOnEmail(MongoCollection users)
+		public static void EnsureUniqueIndexOnEmail<TUser>(IMongoCollection<TUser> users)
+			where TUser : IdentityUser
 		{
-			var email = new IndexKeysBuilder<IdentityUser>().Ascending(t => t.Email);
-			var unique = new IndexOptionsBuilder().SetUnique(true);
-			users.CreateIndex(email, unique);
+			var email = Builders<TUser>.IndexKeys.Ascending(t => t.Email);
+			var unique = new CreateIndexOptions {Unique = true};
+			users.Indexes.CreateOneAsync(email, unique);
 		}
 	}
 }

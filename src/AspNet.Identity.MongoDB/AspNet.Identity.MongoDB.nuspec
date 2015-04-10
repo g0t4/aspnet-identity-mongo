@@ -2,15 +2,15 @@
 <package >
   <metadata>
     <id>AspNet.Identity.MongoDB</id>
-    <version>1.0.2-alpha1</version>
-    <authors>Wes McClure</authors>
-    <owners>Wes McClure</owners>
+    <version>2.0.0</version>
+    <authors>Wes Higbee</authors>
+    <owners>Wes Higbee</owners>
     <licenseUrl>https://github.com/g0t4/aspnet-identity-mongo/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/g0t4/aspnet-identity-mongo</projectUrl>
     <iconUrl>https://github.com/g0t4/aspnet-identity-mongo</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A mongodb provider for the new ASP.NET Identity framework. My aim is to ensure this project is well tested and configurable.</description>
-    <releaseNotes>Remove automatic index creation from constructor of IdentityContext, make this optional for consumers to call as desired in the startup, or otherwise, of their application.</releaseNotes>
+    <releaseNotes>Update to the new MongoDB 2.0 driver and remove coupling to the legacy driver. We now have async support with the Identity interfaces.</releaseNotes>
     <copyright>MIT</copyright>
     <tags>mongo mongodb aspnet identity</tags>
   </metadata>

@@ -5,11 +5,10 @@
 	using System.Linq;
 	using System.Security.Claims;
 	using System.Threading.Tasks;
-	using global::MongoDB.Bson;
-	using global::MongoDB.Driver.Builders;
-	using global::MongoDB.Driver.Linq;
+	using global::MongoDB.Driver;
 	using Microsoft.AspNet.Identity;
 
+	/// todo when the new LINQ implementation arrives in the 2.1 driver we can add back IQueryableRoleStore and IQueryableUserStore: https://jira.mongodb.org/browse/CSHARP-935
 	public class UserStore<TUser> : IUserStore<TUser>,
 		IUserPasswordStore<TUser>,
 		IUserRoleStore<TUser>,
@@ -17,17 +16,16 @@
 		IUserSecurityStampStore<TUser>,
 		IUserEmailStore<TUser>,
 		IUserClaimStore<TUser>,
-		IQueryableUserStore<TUser>,
 		IUserPhoneNumberStore<TUser>,
 		IUserTwoFactorStore<TUser, string>,
 		IUserLockoutStore<TUser, string>
 		where TUser : IdentityUser
 	{
-		private readonly IdentityContext _Context;
+		private readonly IMongoCollection<TUser> _Users;
 
-		public UserStore(IdentityContext context)
+		public UserStore(IMongoCollection<TUser> users)
 		{
-			_Context = context;
+			_Users = users;
 		}
 
 		public virtual void Dispose()
@@ -37,31 +35,29 @@
 
 		public virtual Task CreateAsync(TUser user)
 		{
-			return Task.Run(() => _Context.Users.Insert(user));
+			return _Users.InsertOneAsync(user);
 		}
 
 		public virtual Task UpdateAsync(TUser user)
 		{
 			// todo should add an optimistic concurrency check
-			return Task.Run(() => _Context.Users.Save(user));
+			return _Users.ReplaceOneAsync(u => u.Id == user.Id, user);
 		}
 
 		public virtual Task DeleteAsync(TUser user)
 		{
-			var queryById = Query<TUser>.EQ(u => u.Id, user.Id);
-			return Task.Run(() => _Context.Users.Remove(queryById));
+			return _Users.DeleteOneAsync(u => u.Id == user.Id);
 		}
 
 		public virtual Task<TUser> FindByIdAsync(string userId)
 		{
-			return Task.Run(() => _Context.Users.FindOneByIdAs<TUser>(ObjectId.Parse(userId)));
+			return _Users.Find(u => u.Id == userId).FirstOrDefaultAsync();
 		}
 
 		public virtual Task<TUser> FindByNameAsync(string userName)
 		{
 			// todo exception on duplicates? or better to enforce unique index to ensure this
-			var queryByName = Query<TUser>.EQ(u => u.UserName, userName);
-			return Task.Run(() => _Context.Users.FindOneAs<TUser>(queryByName));
+			return _Users.Find(u => u.UserName == userName).FirstOrDefaultAsync();
 		}
 
 		public virtual Task SetPasswordHashAsync(TUser user, string passwordHash)
@@ -121,10 +117,9 @@
 
 		public virtual Task<TUser> FindAsync(UserLoginInfo login)
 		{
-			return Task.Factory
-				.StartNew(() => _Context.Users.AsQueryable<TUser>()
-					.FirstOrDefault(u => u.Logins
-						.Any(l => l.LoginProvider == login.LoginProvider && l.ProviderKey == login.ProviderKey)));
+			return _Users
+				.Find(u => u.Logins.Any(l => l.LoginProvider == login.LoginProvider && l.ProviderKey == login.ProviderKey))
+				.FirstOrDefaultAsync();
 		}
 
 		public virtual Task SetSecurityStampAsync(TUser user, string stamp)
@@ -163,7 +158,7 @@
 		public virtual Task<TUser> FindByEmailAsync(string email)
 		{
 			// todo what if a user can have multiple accounts with the same email?
-			return Task.Run(() => _Context.Users.AsQueryable<TUser>().FirstOrDefault(u => u.Email == email));
+			return _Users.Find(u => u.Email == email).FirstOrDefaultAsync();
 		}
 
 		public virtual Task<IList<Claim>> GetClaimsAsync(TUser user)
@@ -181,11 +176,6 @@
 		{
 			user.RemoveClaim(claim);
 			return Task.FromResult(0);
-		}
-
-		public virtual IQueryable<TUser> Users
-		{
-			get { return _Context.Users.AsQueryable<TUser>(); }
 		}
 
 		public virtual Task SetPhoneNumberAsync(TUser user, string phoneNumber)

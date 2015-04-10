@@ -6,18 +6,17 @@ A mongodb provider for the new ASP.NET Identity framework. My aim is to ensure t
 ## Usage
 
 	var client = new MongoClient("mongodb://localhost:27017");
-	var database = client.GetServer().GetDatabase("mydb");
+	var database = client.GetDatabase("mydb");
 	var users = database.GetCollection<IdentityUser>("users");
 
-	var context = new IdentityContext(users);
-	var store = new UserStore<IdentityUser>(context);
+	var store = new UserStore<IdentityUser>(users);
 	var manager = new UserManager<IdentityUser>(store);
 
 	// if you want roles too:
 	var roles = database.GetCollection<IdentityRole>("roles");
-	var context = new IdentityContext(users, roles);
+	var roleStore = new RoleStore<IdentityRole>(roles);
 
-	// at some point in application startup it would be good to ensure unique indexes on user and role names exist, these used to be a part of IdentityContext, but that caused issues for people that didn't want the indexes created at the time the IdentityContext is created. They're now just part of the static IndexChecks:
+	// at some point in application startup it would be good to ensure unique indexes on user and role names exist:
 
 	IndexChecks.EnsureUniqueIndexOnUserName(users);
 	IndexChecks.EnsureUniqueIndexOnEmail(users);

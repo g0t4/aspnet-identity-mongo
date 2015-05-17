@@ -123,7 +123,7 @@
                 } else {
                     return IdentityResult.Failed(
                         new IdentityError {
-                            Description = $"Der User {user.UserName} (ID: {user.Id}) konnte nicht aktualisiert werden."
+                            Description = $"The user {user.UserName} (ID: {user.Id}) could not be updated."
                         }
                     );
                 }
@@ -151,7 +151,7 @@
                 } else {
                     return IdentityResult.Failed(
                         new IdentityError {
-                            Description = $"Der User {user.UserName} (ID: {user.Id}) konnte nicht gelöscht werden."
+                            Description = $"The user {user.UserName} (ID: {user.Id}) could not be deleted."
                         }
                     );
                 }

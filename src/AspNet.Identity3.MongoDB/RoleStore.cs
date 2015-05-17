@@ -59,7 +59,7 @@
 
                 } else {
                     return IdentityResult.Failed(new IdentityError {
-                        Description = "Die Aktualisierung der Rolle konnte nicht durchgeführt werden."
+                        Description = $"The role {role.Name} (ID: {role.Id}) could not be updated."
                     });
                 }
 
@@ -86,7 +86,7 @@
                 } else {
                     return IdentityResult.Failed(
                         new IdentityError {
-                            Description = $"Die Rolle {role.Name} konnte nicht gelöscht werden."
+                            Description = $"The role {role.Name} (ID: {role.Id}) could not be deleted."
                         }
                     );
                 }

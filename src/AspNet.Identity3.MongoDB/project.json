@@ -1,0 +1,27 @@
+{
+  "title": "AspNet.Identity.MongoDB",
+  "version": "2.1.0-*",
+  "description": "A mongodb provider for the new ASP.NET Identity framework. My aim is to ensure this project is well tested and configurable.",
+  "authors": [
+    "Michael Heinrich",
+    "Wes Higbee"
+  ],
+  "tags": [
+    "mongo",
+    "mongodb",
+    "aspnet",
+    "identity"
+  ],
+  "projectUrl": "https://github.com/g0t4/aspnet-identity-mongo",
+  "licenseUrl": "https://github.com/g0t4/aspnet-identity-mongo/blob/master/LICENSE",
+  "copyright": "MIT",
+
+  "dependencies": {
+    "Microsoft.AspNet.Identity": "3.0.0-beta4",
+    "MongoDB.Driver": "2.0.0"
+  },
+
+  "frameworks": {
+    "dnx451": { }
+  }
+}

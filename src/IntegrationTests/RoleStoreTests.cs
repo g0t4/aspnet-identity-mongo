@@ -4,6 +4,7 @@
 	using AspNet.Identity.MongoDB;
 	using Microsoft.AspNet.Identity;
 	using MongoDB.Bson;
+	using MongoDB.Driver;
 	using NUnit.Framework;
 	using Tests;
 
@@ -19,7 +20,7 @@
 
 			manager.Create(role);
 
-			var savedRole = Roles.FindAll().Single();
+			var savedRole = Roles.AsQueryable().Single();
 			Expect(savedRole.Name, Is.EqualTo(roleName));
 		}
 
@@ -58,11 +59,11 @@
 			var role = new IdentityRole {Name = "name"};
 			var manager = GetRoleManager();
 			manager.Create(role);
-			Expect(Roles.FindAll(), Is.Not.Empty);
+			Expect(Roles.AsQueryable().ToList(), Is.Not.Empty);
 
 			manager.Delete(role);
 
-			Expect(Roles.FindAll(), Is.Empty);
+			Expect(Roles.AsQueryable().ToList(), Is.Empty);
 		}
 
 		[Test]
@@ -76,7 +77,7 @@
 
 			manager.Update(savedRole);
 
-			var changedRole = Roles.FindAll().Single();
+			var changedRole = Roles.AsQueryable().Single();
 			Expect(changedRole, Is.Not.Null);
 			Expect(changedRole.Name, Is.EqualTo("newname"));
 		}

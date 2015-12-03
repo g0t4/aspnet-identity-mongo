@@ -3,6 +3,7 @@
 	using System.Linq;
 	using AspNet.Identity.MongoDB;
 	using Microsoft.AspNet.Identity;
+	using MongoDB.Driver;
 	using NUnit.Framework;
 
 	[TestFixture]
@@ -35,7 +36,7 @@
 
 			_Manager.Create(_User);
 
-			var savedUser = Users.FindAllAs<ExtendedIdentityUser>().Single();
+			var savedUser = Users.OfType<ExtendedIdentityUser>().AsQueryable().Single();
 			Expect(savedUser.ExtendedField, Is.EqualTo("extendedField"));
 		}
 

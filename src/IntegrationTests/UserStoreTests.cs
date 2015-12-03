@@ -4,6 +4,7 @@
 	using AspNet.Identity.MongoDB;
 	using Microsoft.AspNet.Identity;
 	using MongoDB.Bson;
+	using MongoDB.Driver;
 	using NUnit.Framework;
 	using Tests;
 
@@ -19,7 +20,7 @@
 
 			manager.Create(user);
 
-			var savedUser = Users.FindAll().Single();
+			var savedUser = Users.AsQueryable().Single();
 			Expect(savedUser.UserName, Is.EqualTo(user.UserName));
 		}
 
@@ -78,11 +79,11 @@
 			var user = new IdentityUser {UserName = "name"};
 			var manager = GetUserManager();
 			manager.Create(user);
-			Expect(Users.FindAll(), Is.Not.Empty);
+			Expect(Users.AsQueryable().ToList(), Is.Not.Empty);
 
 			manager.Delete(user);
 
-			Expect(Users.FindAll(), Is.Empty);
+            Expect(Users.AsQueryable().ToList(), Is.Empty);
 		}
 
 		[Test]
@@ -96,7 +97,7 @@
 
 			manager.Update(savedUser);
 
-			var changedUser = Users.FindAll().Single();
+			var changedUser = Users.AsQueryable().Single();
 			Expect(changedUser, Is.Not.Null);
 			Expect(changedUser.UserName, Is.EqualTo("newname"));
 		}

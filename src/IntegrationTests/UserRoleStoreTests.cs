@@ -3,6 +3,7 @@
 	using System.Linq;
 	using AspNet.Identity.MongoDB;
 	using Microsoft.AspNet.Identity;
+	using MongoDB.Driver;
 	using NUnit.Framework;
 
 	[TestFixture]
@@ -29,7 +30,7 @@
 
 			manager.AddToRole(user.Id, "role");
 
-			var savedUser = Users.FindAll().Single();
+            var savedUser = Users.AsQueryable().Single();
 			Expect(savedUser.Roles, Is.EquivalentTo(new[] {"role"}));
 			Expect(manager.IsInRole(user.Id, "role"), Is.True);
 		}
@@ -44,7 +45,7 @@
 
 			manager.RemoveFromRole(user.Id, "role");
 
-			var savedUser = Users.FindAll().Single();
+            var savedUser = Users.AsQueryable().Single();
 			Expect(savedUser.Roles, Is.Empty);
 			Expect(manager.IsInRole(user.Id, "role"), Is.False);
 		}

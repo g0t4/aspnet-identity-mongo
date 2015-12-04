@@ -3,6 +3,7 @@
 	using System.Linq;
 	using AspNet.Identity.MongoDB;
 	using Microsoft.AspNet.Identity;
+	using MongoDB.Driver;
 	using NUnit.Framework;
 
 	[TestFixture]
@@ -16,7 +17,7 @@
 
 			manager.Create(user);
 
-			var savedUser = Users.FindAll().Single();
+            var savedUser = Users.AsQueryable().Single();
 			Expect(savedUser.SecurityStamp, Is.Not.Null);
 		}
 

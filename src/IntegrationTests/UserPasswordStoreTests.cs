@@ -3,6 +3,7 @@
 	using System.Linq;
 	using AspNet.Identity.MongoDB;
 	using Microsoft.AspNet.Identity;
+	using MongoDB.Driver;
 	using NUnit.Framework;
 
 	[TestFixture]
@@ -43,7 +44,7 @@
 
 			manager.RemovePassword(user.Id);
 
-			var savedUser = Users.FindAll().Single();
+            var savedUser = Users.AsQueryable().Single();
 			Expect(savedUser.PasswordHash, Is.Null);
 		}
 	}

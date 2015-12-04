@@ -3,6 +3,7 @@
 	using System.Linq;
 	using AspNet.Identity.MongoDB;
 	using Microsoft.AspNet.Identity;
+	using MongoDB.Driver;
 	using NUnit.Framework;
 
 	[TestFixture]
@@ -18,7 +19,7 @@
 
 			manager.AddLogin(user.Id, login);
 
-			var savedLogin = Users.FindAll().Single().Logins.Single();
+			var savedLogin = Users.AsQueryable().Single().Logins.Single();
 			Expect(savedLogin.LoginProvider, Is.EqualTo("provider"));
 			Expect(savedLogin.ProviderKey, Is.EqualTo("key"));
 		}
@@ -35,7 +36,7 @@
 
 			manager.RemoveLogin(user.Id, login);
 
-			var savedUser = Users.FindAll().Single();
+            var savedUser = Users.AsQueryable().Single();
 			Expect(savedUser.Logins, Is.Empty);
 		}
 

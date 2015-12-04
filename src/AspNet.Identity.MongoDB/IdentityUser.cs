@@ -8,6 +8,7 @@
 	using global::MongoDB.Bson.Serialization.Attributes;
 	using Microsoft.AspNet.Identity;
 
+    [BsonDiscriminator(RootClass = true)]
 	public class IdentityUser : IUser<string>
 	{
 		public IdentityUser()

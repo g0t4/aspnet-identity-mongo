@@ -9,7 +9,7 @@
 	using Microsoft.AspNet.Identity;
 
 	/// todo when the new LINQ implementation arrives in the 2.1 driver we can add back IQueryableRoleStore and IQueryableUserStore: https://jira.mongodb.org/browse/CSHARP-935
-	public class UserStore<TUser> : IUserStore<TUser>,
+    public class UserStore<TUser> : IUserStore<TUser>,
 		IUserPasswordStore<TUser>,
 		IUserRoleStore<TUser>,
 		IUserLoginStore<TUser>,
@@ -18,7 +18,8 @@
 		IUserClaimStore<TUser>,
 		IUserPhoneNumberStore<TUser>,
 		IUserTwoFactorStore<TUser, string>,
-		IUserLockoutStore<TUser, string>
+		IUserLockoutStore<TUser, string>,
+        IQueryableUserStore<TUser>
 		where TUser : IdentityUser
 	{
 		private readonly IMongoCollection<TUser> _Users;
@@ -32,6 +33,8 @@
 		{
 			// no need to dispose of anything, mongodb handles connection pooling automatically
 		}
+        
+        public IQueryable<TUser> Users { get { return _Users.AsQueryable(); } }
 
 		public virtual Task CreateAsync(TUser user)
 		{

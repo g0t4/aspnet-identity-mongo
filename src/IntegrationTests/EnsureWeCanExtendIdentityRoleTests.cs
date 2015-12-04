@@ -3,6 +3,8 @@
 	using System.Linq;
 	using AspNet.Identity.MongoDB;
 	using Microsoft.AspNet.Identity;
+	using MongoDB.Bson.Serialization;
+	using MongoDB.Driver;
 	using NUnit.Framework;
 
 	[TestFixture]
@@ -19,7 +21,7 @@
 		[SetUp]
 		public void BeforeEachTestAfterBase()
 		{
-			var roles = DatabaseNewApi.GetCollection<ExtendedIdentityRole>("roles");
+            var roles = DatabaseNewApi.GetCollection<ExtendedIdentityRole>("roles");
 			var roleStore = new RoleStore<ExtendedIdentityRole>(roles);
 			_Manager = new RoleManager<ExtendedIdentityRole>(roleStore);
 			_Role = new ExtendedIdentityRole
@@ -32,10 +34,9 @@
 		public void Create_ExtendedRoleType_SavesExtraFields()
 		{
 			_Role.ExtendedField = "extendedField";
+            _Manager.Create(_Role);
 
-			_Manager.Create(_Role);
-
-			var savedRole = Roles.FindAllAs<ExtendedIdentityRole>().Single();
+            var savedRole = Roles.OfType<ExtendedIdentityRole>().AsQueryable().Single();
 			Expect(savedRole.ExtendedField, Is.EqualTo("extendedField"));
 		}
 

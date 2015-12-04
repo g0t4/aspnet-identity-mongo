@@ -1,6 +1,7 @@
 ﻿namespace AspNet.Identity.MongoDB
 {
-	using System.Threading.Tasks;
+    using System.Linq;
+    using System.Threading.Tasks;
 	using global::MongoDB.Driver;
 	using Microsoft.AspNet.Identity;
 
@@ -11,7 +12,8 @@
 	///     perform a document modification on the users collection before a delete or a rename.
 	/// </summary>
 	/// <typeparam name="TRole"></typeparam>
-	public class RoleStore<TRole> : IRoleStore<TRole>
+    public class RoleStore<TRole> : IRoleStore<TRole>,
+        IQueryableRoleStore<TRole>
 		where TRole : IdentityRole
 	{
 		private readonly IMongoCollection<TRole> _Roles;
@@ -25,6 +27,8 @@
 		{
 			// no need to dispose of anything, mongodb handles connection pooling automatically
 		}
+
+        public IQueryable<TRole> Roles { get { return _Roles.AsQueryable(); } }
 
 		public virtual Task CreateAsync(TRole role)
 		{

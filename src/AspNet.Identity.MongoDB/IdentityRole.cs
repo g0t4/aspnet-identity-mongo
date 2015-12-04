@@ -4,7 +4,8 @@
 	using global::MongoDB.Bson.Serialization.Attributes;
 	using Microsoft.AspNet.Identity;
 
-	public class IdentityRole : IRole<string>
+    [BsonDiscriminator(RootClass = true)]
+    public class IdentityRole : IRole<string>
 	{
 		public IdentityRole()
 		{

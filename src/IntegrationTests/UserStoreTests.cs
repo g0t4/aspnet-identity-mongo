@@ -20,7 +20,9 @@
 
 			manager.Create(user);
 
-			var savedUser = Users.AsQueryable().Single();
+            var queryableUsers = manager.Users;
+            var savedUser = Users.AsQueryable().Single();
+            Expect(queryableUsers.Count(), Is.EqualTo(1));
 			Expect(savedUser.UserName, Is.EqualTo(user.UserName));
 		}
 

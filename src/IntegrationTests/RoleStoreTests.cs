@@ -81,5 +81,16 @@
 			Expect(changedRole, Is.Not.Null);
 			Expect(changedRole.Name, Is.EqualTo("newname"));
 		}
+
+	    [Test]
+	    public void AsQueryable_Returns_QueryableRoles()
+	    {
+            var role = new IdentityRole { Name = "name" };
+            var manager = GetRoleManager();
+            manager.Create(role);
+
+	        var queryable = manager.Roles;
+            Expect(queryable.Count(), Is.EqualTo(1));
+	    }
 	}
 }

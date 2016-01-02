@@ -8,7 +8,6 @@
 	using global::MongoDB.Driver;
 	using Microsoft.AspNet.Identity;
 
-	/// todo when the new LINQ implementation arrives in the 2.1 driver we can add back IQueryableRoleStore and IQueryableUserStore: https://jira.mongodb.org/browse/CSHARP-935
 	public class UserStore<TUser> : IUserStore<TUser>,
 		IUserPasswordStore<TUser>,
 		IUserRoleStore<TUser>,
@@ -18,8 +17,9 @@
 		IUserClaimStore<TUser>,
 		IUserPhoneNumberStore<TUser>,
 		IUserTwoFactorStore<TUser, string>,
-		IUserLockoutStore<TUser, string>
-		where TUser : IdentityUser
+		IUserLockoutStore<TUser, string>,
+        IQueryableUserStore<TUser>
+        where TUser : IdentityUser
 	{
 		private readonly IMongoCollection<TUser> _Users;
 
@@ -249,5 +249,7 @@
 			user.LockoutEnabled = enabled;
 			return Task.FromResult(0);
 		}
+
+		public virtual IQueryable<TUser> Users => _Users.AsQueryable();
 	}
 }

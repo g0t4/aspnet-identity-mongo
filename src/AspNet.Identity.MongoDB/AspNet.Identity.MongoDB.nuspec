@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>AspNet.Identity.MongoDB</id>
-    <version>2.0.0</version>
+    <version>2.1.0</version>
     <authors>Wes Higbee</authors>
     <owners>Wes Higbee</owners>
     <licenseUrl>https://github.com/g0t4/aspnet-identity-mongo/blob/master/LICENSE</licenseUrl>
@@ -10,7 +10,7 @@
     <iconUrl>https://github.com/g0t4/aspnet-identity-mongo</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A mongodb provider for the new ASP.NET Identity framework. My aim is to ensure this project is well tested and configurable.</description>
-    <releaseNotes>Update to the new MongoDB 2.0 driver and remove coupling to the legacy driver. We now have async support with the Identity interfaces.</releaseNotes>
+    <releaseNotes>MongoDB 2.2 c# driver and add back queryable (LINQ) user and role stores.</releaseNotes>
     <copyright>MIT</copyright>
     <tags>mongo mongodb aspnet identity</tags>
   </metadata>

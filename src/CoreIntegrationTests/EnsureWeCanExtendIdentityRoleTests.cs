@@ -1,8 +1,10 @@
 ﻿namespace IntegrationTests
 {
 	using System.Linq;
-	using AspNet.Identity.MongoDB;
-	using Microsoft.AspNet.Identity;
+	using System.Threading.Tasks;
+	using Microsoft.AspNetCore.Identity;
+	using Microsoft.AspNetCore.Identity.MongoDB;
+	using Microsoft.Extensions.DependencyInjection;
 	using NUnit.Framework;
 
 	[TestFixture]
@@ -19,9 +21,8 @@
 		[SetUp]
 		public void BeforeEachTestAfterBase()
 		{
-			var roles = DatabaseNewApi.GetCollection<ExtendedIdentityRole>("roles");
-			var roleStore = new RoleStore<ExtendedIdentityRole>(roles);
-			_Manager = new RoleManager<ExtendedIdentityRole>(roleStore);
+			_Manager = CreateServiceProvider<IdentityUser, ExtendedIdentityRole>()
+				.GetService<RoleManager<ExtendedIdentityRole>>();
 			_Role = new ExtendedIdentityRole
 			{
 				Name = "admin"
@@ -29,24 +30,24 @@
 		}
 
 		[Test]
-		public void Create_ExtendedRoleType_SavesExtraFields()
+		public async Task Create_ExtendedRoleType_SavesExtraFields()
 		{
 			_Role.ExtendedField = "extendedField";
 
-			_Manager.Create(_Role);
+			await _Manager.CreateAsync(_Role);
 
 			var savedRole = Roles.FindAllAs<ExtendedIdentityRole>().Single();
 			Expect(savedRole.ExtendedField, Is.EqualTo("extendedField"));
 		}
 
 		[Test]
-		public void Create_ExtendedRoleType_ReadsExtraFields()
+		public async Task Create_ExtendedRoleType_ReadsExtraFields()
 		{
 			_Role.ExtendedField = "extendedField";
 
-			_Manager.Create(_Role);
+			await _Manager.CreateAsync(_Role);
 
-			var savedRole = _Manager.FindById(_Role.Id);
+			var savedRole = await _Manager.FindByIdAsync(_Role.Id);
 			Expect(savedRole.ExtendedField, Is.EqualTo("extendedField"));
 		}
 	}

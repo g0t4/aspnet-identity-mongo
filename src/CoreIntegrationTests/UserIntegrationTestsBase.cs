@@ -1,7 +1,10 @@
 ﻿namespace IntegrationTests
 {
-	using AspNet.Identity.MongoDB;
-	using Microsoft.AspNet.Identity;
+	using System;
+	using Microsoft.AspNetCore.Identity;
+	using Microsoft.AspNetCore.Identity.MongoDB;
+	using Microsoft.Extensions.DependencyInjection;
+	using Microsoft.Extensions.Logging;
 	using MongoDB.Driver;
 	using NUnit.Framework;
 
@@ -15,6 +18,7 @@
 		protected IMongoDatabase DatabaseNewApi;
 		private IMongoCollection<IdentityUser> _UsersNewApi;
 		private IMongoCollection<IdentityRole> _RolesNewApi;
+		protected IServiceProvider ServiceProvider;
 
 		[SetUp]
 		public void BeforeEachTest()
@@ -32,18 +36,54 @@
 
 			Database.DropCollection("users");
 			Database.DropCollection("roles");
+
+			ServiceProvider = CreateServiceProvider<IdentityUser, IdentityRole>();
 		}
 
 		protected UserManager<IdentityUser> GetUserManager()
-		{
-			var store = new UserStore<IdentityUser>(_UsersNewApi);
-			return new UserManager<IdentityUser>(store);
-		}
+			=> ServiceProvider.GetService<UserManager<IdentityUser>>();
 
 		protected RoleManager<IdentityRole> GetRoleManager()
+			=> ServiceProvider.GetService<RoleManager<IdentityRole>>();
+
+		protected IServiceProvider CreateServiceProvider<TUser, TRole>()
+			where TUser : IdentityUser
+			where TRole : IdentityRole
 		{
-			var store = new RoleStore<IdentityRole>(_RolesNewApi);
-			return new RoleManager<IdentityRole>(store);
+			var services = new ServiceCollection();
+			services.AddIdentity<TUser, TRole>()
+				.AddDefaultTokenProviders();
+
+			var roles = DatabaseNewApi.GetCollection<TRole>("roles");
+			var roleStore = new RoleStore<TRole>(roles);
+			services.AddSingleton<IRoleStore<TRole>>(roleStore);
+
+			var users = DatabaseNewApi.GetCollection<TUser>("users");
+			var userStore = new UserStore<TUser>(users);
+			services.AddSingleton<IUserStore<TUser>>(userStore);
+
+			services.AddLogging();
+			services.AddSingleton<ILogger<UserManager<TUser>>>(new TestLogger<UserManager<TUser>>());
+			services.AddSingleton<ILogger<RoleManager<TRole>>>(new TestLogger<RoleManager<TRole>>());
+
+			return services.BuildServiceProvider();
+		}
+
+		public class TestLogger<TName> : ILogger<TName>
+		{
+			public IDisposable BeginScope<TState>(TState state)
+			{
+				return null;
+			}
+
+			public bool IsEnabled(LogLevel logLevel)
+			{
+				return true;
+			}
+
+			public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+			{
+			}
 		}
 	}
 }

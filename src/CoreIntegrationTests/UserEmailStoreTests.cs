@@ -1,89 +1,87 @@
 ﻿namespace IntegrationTests
 {
-	using AspNet.Identity.MongoDB;
-	using Microsoft.AspNet.Identity;
+	using System.Threading.Tasks;
+	using Microsoft.AspNetCore.Identity.MongoDB;
 	using NUnit.Framework;
 
 	[TestFixture]
 	public class UserEmailStoreTests : UserIntegrationTestsBase
 	{
 		[Test]
-		public void Create_NewUser_HasNoEmail()
+		public async Task Create_NewUser_HasNoEmail()
 		{
 			var user = new IdentityUser {UserName = "bob"};
 			var manager = GetUserManager();
-			manager.Create(user);
+			await manager.CreateAsync(user);
 
-			var email = manager.GetEmail(user.Id);
+			var email = await manager.GetEmailAsync(user);
 
 			Expect(email, Is.Null);
 		}
 
 		[Test]
-		public void SetEmail_SetsEmail()
+		public async Task SetEmail_SetsEmail()
 		{
 			var user = new IdentityUser {UserName = "bob"};
 			var manager = GetUserManager();
-			manager.Create(user);
+			await manager.CreateAsync(user);
 
-			manager.SetEmail(user.Id, "email");
+			await manager.SetEmailAsync(user, "email");
 
-			Expect(manager.GetEmail(user.Id), Is.EqualTo("email"));
+			Expect(await manager.GetEmailAsync(user), Is.EqualTo("email"));
 		}
 
 		[Test]
-		public void FindUserByEmail_ReturnsUser()
+		public async Task FindUserByEmail_ReturnsUser()
 		{
 			var user = new IdentityUser {UserName = "bob"};
 			var manager = GetUserManager();
-			manager.Create(user);
-			Expect(manager.FindByEmail("email"), Is.Null);
+			await manager.CreateAsync(user);
+			Expect(await manager.FindByEmailAsync("email"), Is.Null);
 
-			manager.SetEmail(user.Id, "email");
+			await manager.SetEmailAsync(user, "email");
 
-			Expect(manager.FindByEmail("email"), Is.Not.Null);
+			Expect(await manager.FindByEmailAsync("email"), Is.Not.Null);
 		}
 
 		[Test]
-		public void Create_NewUser_IsNotEmailConfirmed()
+		public async Task Create_NewUser_IsNotEmailConfirmed()
 		{
 			var manager = GetUserManager();
 			var user = new IdentityUser {UserName = "bob"};
-			manager.Create(user);
+			await manager.CreateAsync(user);
 
-			var isConfirmed = manager.IsEmailConfirmed(user.Id);
+			var isConfirmed = await manager.IsEmailConfirmedAsync(user);
 
 			Expect(isConfirmed, Is.False);
 		}
 
 		[Test]
-		public void SetEmailConfirmed_IsConfirmed()
+		public async Task SetEmailConfirmed_IsConfirmed()
 		{
 			var manager = GetUserManager();
 			var user = new IdentityUser {UserName = "bob"};
-			manager.Create(user);
-			manager.UserTokenProvider = new EmailTokenProvider<IdentityUser>();
-			var token = manager.GenerateEmailConfirmationToken(user.Id);
+			await manager.CreateAsync(user);
+			var token = await manager.GenerateEmailConfirmationTokenAsync(user);
 
-			manager.ConfirmEmail(user.Id, token);
+			await manager.ConfirmEmailAsync(user, token);
 
-			var isConfirmed = manager.IsEmailConfirmed(user.Id);
+			var isConfirmed = await manager.IsEmailConfirmedAsync(user);
 			Expect(isConfirmed);
 		}
 
 		[Test]
-		public void ChangeEmail_AfterConfirmedOriginalEmail_NotEmailConfirmed()
+		public async Task ChangeEmail_AfterConfirmedOriginalEmail_NotEmailConfirmed()
 		{
 			var manager = GetUserManager();
 			var user = new IdentityUser {UserName = "bob"};
-			manager.Create(user);
-			manager.UserTokenProvider = new EmailTokenProvider<IdentityUser>();
-			var token = manager.GenerateEmailConfirmationToken(user.Id);
-			manager.ConfirmEmail(user.Id, token);
+			await manager.CreateAsync(user);
+			var token = await manager.GenerateEmailConfirmationTokenAsync(user);
+			await manager.ConfirmEmailAsync(user, token);
 
-			manager.SetEmail(user.Id, "new@email.com");
+			await manager.SetEmailAsync(user, "new@email.com");
 
-			var isConfirmed = manager.IsEmailConfirmed(user.Id);
+			var isConfirmed = await manager.IsEmailConfirmedAsync(user);
 			Expect(isConfirmed, Is.False);
 		}
 	}

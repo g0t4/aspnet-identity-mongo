@@ -82,6 +82,7 @@
 			=> _Users.Find(u => u.Id == userId).FirstOrDefaultAsync(token);
 
 		public virtual Task<TUser> FindByNameAsync(string userName, CancellationToken token)
+			// todo test fails with normalized?
 			// todo exception on duplicates? or better to enforce unique index to ensure this
 			=> _Users.Find(u => u.UserName == userName).FirstOrDefaultAsync(token);
 
@@ -154,23 +155,18 @@
 		}
 
 		// todo testing
-		public virtual Task<string> GetNormalizedEmailAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			// todo return Task.FromResult(user.NormalizedEmail);
-			return null;
-		}
+		public virtual async Task<string> GetNormalizedEmailAsync(TUser user, CancellationToken cancellationToken)
+			=> user.NormalizedEmail;
 
 		// todo testing
-		public virtual Task SetNormalizedEmailAsync(TUser user, string normalizedEmail, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			// todo user.NormalizedEmail = normalizedEmail;
-			return Task.FromResult(0);
-		}
+		public virtual async Task SetNormalizedEmailAsync(TUser user, string normalizedEmail, CancellationToken cancellationToken)
+			=> user.NormalizedEmail = normalizedEmail;
 
 		public virtual Task<TUser> FindByEmailAsync(string email, CancellationToken token)
 		{
+			// todo I don't like that this now searches on normalized email :(... why not FindByNormalizedEmailAsync then?
 			// todo what if a user can have multiple accounts with the same email?
-			return _Users.Find(u => u.Email == email).FirstOrDefaultAsync();
+			return _Users.Find(u => u.NormalizedEmail == email).FirstOrDefaultAsync(token);
 		}
 
 		public virtual async Task<IList<Claim>> GetClaimsAsync(TUser user, CancellationToken token)

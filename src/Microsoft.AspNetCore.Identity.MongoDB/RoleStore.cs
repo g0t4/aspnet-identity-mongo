@@ -61,7 +61,8 @@
 
 		public virtual Task<TRole> FindByNameAsync(string roleName, CancellationToken token)
 		{
-			return _Roles.Find(r => r.Name == roleName).FirstOrDefaultAsync(token);
+			// todo thoughts on searching now by normalized name without changing api...
+			return _Roles.Find(r => r.NormalizedName == roleName).FirstOrDefaultAsync(token);
 		}
 
 		public virtual IQueryable<TRole> Roles => _Roles.AsQueryable();

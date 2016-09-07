@@ -20,7 +20,7 @@
 		}
 
 		[BsonRepresentation(BsonType.ObjectId)]
-		public string Id { get; private set; }
+		public string Id { get; set; }
 
 		public string UserName { get; set; }
 
@@ -31,6 +31,7 @@
 		public virtual string SecurityStamp { get; set; }
 
 		public virtual string Email { get; set; }
+		public virtual string NormalizedEmail { get; set; }
 
 		public virtual bool EmailConfirmed { get; set; }
 

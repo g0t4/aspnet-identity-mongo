@@ -1,8 +1,10 @@
 ﻿namespace IntegrationTests
 {
 	using System.Linq;
-	using AspNet.Identity.MongoDB;
-	using Microsoft.AspNet.Identity;
+	using System.Threading.Tasks;
+	using Microsoft.AspNetCore.Identity;
+	using Microsoft.AspNetCore.Identity.MongoDB;
+	using Microsoft.Extensions.DependencyInjection;
 	using NUnit.Framework;
 
 	[TestFixture]
@@ -19,9 +21,8 @@
 		[SetUp]
 		public void BeforeEachTestAfterBase()
 		{
-			var users = DatabaseNewApi.GetCollection<ExtendedIdentityUser>("users");
-			var userStore = new UserStore<ExtendedIdentityUser>(users);
-			_Manager = new UserManager<ExtendedIdentityUser>(userStore);
+			_Manager = CreateServiceProvider<ExtendedIdentityUser, IdentityRole>()
+				.GetService<UserManager<ExtendedIdentityUser>>();
 			_User = new ExtendedIdentityUser
 			{
 				UserName = "bob"
@@ -29,24 +30,25 @@
 		}
 
 		[Test]
-		public void Create_ExtendedUserType_SavesExtraFields()
+		public async Task Create_ExtendedUserType_SavesExtraFields()
 		{
 			_User.ExtendedField = "extendedField";
 
-			_Manager.Create(_User);
+			// todo note: async methods dropped in Identity 3
+			await _Manager.CreateAsync(_User);
 
 			var savedUser = Users.FindAllAs<ExtendedIdentityUser>().Single();
 			Expect(savedUser.ExtendedField, Is.EqualTo("extendedField"));
 		}
 
 		[Test]
-		public void Create_ExtendedUserType_ReadsExtraFields()
+		public async Task Create_ExtendedUserType_ReadsExtraFields()
 		{
 			_User.ExtendedField = "extendedField";
 
-			_Manager.Create(_User);
+			await _Manager.CreateAsync(_User);
 
-			var savedUser = _Manager.FindById(_User.Id);
+			var savedUser = await _Manager.FindByIdAsync(_User.Id);
 			Expect(savedUser.ExtendedField, Is.EqualTo("extendedField"));
 		}
 	}

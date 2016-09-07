@@ -1,7 +1,7 @@
 ﻿namespace IntegrationTests
 {
 	using System.Linq;
-	using AspNet.Identity.MongoDB;
+	using Microsoft.AspNetCore.Identity.MongoDB;
 	using NUnit.Framework;
 
 	[TestFixture]

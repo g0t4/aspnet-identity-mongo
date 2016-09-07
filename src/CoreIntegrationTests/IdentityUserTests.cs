@@ -1,6 +1,6 @@
 ﻿namespace IntegrationTests
 {
-	using AspNet.Identity.MongoDB;
+	using Microsoft.AspNetCore.Identity.MongoDB;
 	using MongoDB.Bson;
 	using NUnit.Framework;
 	using Tests;
@@ -12,7 +12,7 @@
 		public void Insert_NoId_SetsId()
 		{
 			var user = new IdentityUser();
-			user.SetId(null);
+			user.Id = null;
 
 			Users.Insert(user);
 

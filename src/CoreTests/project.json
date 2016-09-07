@@ -1,8 +1,10 @@
 {
   "version": "1.0.0-*",
 
+  "testRunner": "nunit",
 
   "dependencies": {
+    "dotnet-test-nunit": "3.4.0-beta-2",
     "Microsoft.AspNetCore.Identity": "1.0.0",
     "Microsoft.AspNetCore.Identity.MongoDB": "1.0.0-*",
     "MongoDB.Driver": "2.3.0-rc1",
@@ -11,8 +13,14 @@
   },
 
   "frameworks": {
-    "netstandard1.6": {
-      "imports": "dnxcore50"
+    "netcoreapp1.0": {
+      "imports": "portable-net45+win8",
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "version": "1.0.0-*",
+          "type": "platform"
+        }
+      }
     }
   }
 }

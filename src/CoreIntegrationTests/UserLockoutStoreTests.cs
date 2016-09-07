@@ -1,24 +1,33 @@
 ﻿namespace IntegrationTests
 {
 	using System;
-	using AspNet.Identity.MongoDB;
-	using Microsoft.AspNet.Identity;
+	using System.Threading;
+	using System.Threading.Tasks;
+	using Microsoft.AspNetCore.Identity;
+	using Microsoft.AspNetCore.Identity.MongoDB;
+	using Microsoft.Extensions.DependencyInjection;
 	using NUnit.Framework;
 
 	[TestFixture]
 	public class UserLockoutStoreTests : UserIntegrationTestsBase
 	{
 		[Test]
-		public void AccessFailed_IncrementsAccessFailedCount()
+		public async Task AccessFailed_IncrementsAccessFailedCount()
 		{
-			var manager = GetUserManager();
+			var manager = GetUserManagerWithThreeMaxAccessAttempts();
 			var user = new IdentityUser {UserName = "bob"};
-			manager.Create(user);
-			manager.MaxFailedAccessAttemptsBeforeLockout = 3;
+			await manager.CreateAsync(user);
 
-			manager.AccessFailed(user.Id);
+			await manager.AccessFailedAsync(user);
 
-			Expect(manager.GetAccessFailedCount(user.Id), Is.EqualTo(1));
+			Expect(await manager.GetAccessFailedCountAsync(user), Is.EqualTo(1));
+		}
+
+		private UserManager<IdentityUser> GetUserManagerWithThreeMaxAccessAttempts()
+		{
+			// todo is this really needed to set Max Failed Attempts?
+			return CreateServiceProvider<IdentityUser, IdentityRole>(options => options.Lockout.MaxFailedAccessAttempts = 3)
+				.GetService<UserManager<IdentityUser>>();
 		}
 
 		[Test]
@@ -27,65 +36,67 @@
 			var store = new UserStore<IdentityUser>(null);
 			var user = new IdentityUser {UserName = "bob"};
 
-			var count = store.IncrementAccessFailedCountAsync(user);
+			var count = store.IncrementAccessFailedCountAsync(user, default(CancellationToken));
 
 			Expect(count.Result, Is.EqualTo(1));
 		}
 
 		[Test]
-		public void ResetAccessFailed_AfterAnAccessFailed_SetsToZero()
+		public async Task ResetAccessFailed_AfterAnAccessFailed_SetsToZero()
 		{
-			var manager = GetUserManager();
+			var manager = GetUserManagerWithThreeMaxAccessAttempts();
 			var user = new IdentityUser {UserName = "bob"};
-			manager.Create(user);
-			manager.MaxFailedAccessAttemptsBeforeLockout = 3;
-			manager.AccessFailed(user.Id);
+			await manager.CreateAsync(user);
+			await manager.AccessFailedAsync(user);
 
-			manager.ResetAccessFailedCount(user.Id);
+			await manager.ResetAccessFailedCountAsync(user);
 
-			Expect(manager.GetAccessFailedCount(user.Id), Is.EqualTo(0));
+			Expect(await manager.GetAccessFailedCountAsync(user), Is.EqualTo(0));
 		}
 
 		[Test]
-		public void AccessFailed_NotOverMaxFailures_NoLockoutEndDate()
+		public async Task AccessFailed_NotOverMaxFailures_NoLockoutEndDate()
 		{
-			var manager = GetUserManager();
+			var manager = GetUserManagerWithThreeMaxAccessAttempts();
 			var user = new IdentityUser {UserName = "bob"};
-			manager.Create(user);
-			manager.MaxFailedAccessAttemptsBeforeLockout = 3;
+			await manager.CreateAsync(user);
 
-			manager.AccessFailed(user.Id);
+			await manager.AccessFailedAsync(user);
 
-			Expect(manager.GetLockoutEndDate(user.Id), Is.EqualTo(DateTimeOffset.MinValue));
+			Expect(await manager.GetLockoutEndDateAsync(user), Is.Null);
 		}
 
 		[Test]
-		public void AccessFailed_ExceedsMaxFailedAccessAttempts_LocksAccount()
+		public async Task AccessFailed_ExceedsMaxFailedAccessAttempts_LocksAccount()
 		{
-			var manager = GetUserManager();
+			var manager = CreateServiceProvider<IdentityUser, IdentityRole>(options =>
+				{
+					options.Lockout.MaxFailedAccessAttempts = 0;
+					options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromHours(1);
+				})
+				.GetService<UserManager<IdentityUser>>();
+
 			var user = new IdentityUser {UserName = "bob"};
-			manager.Create(user);
-			manager.MaxFailedAccessAttemptsBeforeLockout = 0;
-			manager.DefaultAccountLockoutTimeSpan = TimeSpan.FromHours(1);
+			await manager.CreateAsync(user);
 
-			manager.AccessFailed(user.Id);
+			await manager.AccessFailedAsync(user);
 
-			var lockoutEndDate = manager.GetLockoutEndDate(user.Id);
-			Expect(lockoutEndDate.Subtract(DateTime.UtcNow).TotalHours, Is.GreaterThan(0.9).And.LessThan(1.1));
+			var lockoutEndDate = await manager.GetLockoutEndDateAsync(user);
+			Expect(lockoutEndDate?.Subtract(DateTime.UtcNow).TotalHours, Is.GreaterThan(0.9).And.LessThan(1.1));
 		}
 
 		[Test]
-		public void SetLockoutEnabled()
+		public async Task SetLockoutEnabled()
 		{
 			var manager = GetUserManager();
 			var user = new IdentityUser {UserName = "bob"};
-			manager.Create(user);
+			await manager.CreateAsync(user);
 
-			manager.SetLockoutEnabled(user.Id, true);
-			Expect(manager.GetLockoutEnabled(user.Id));
+			await manager.SetLockoutEnabledAsync(user, true);
+			Expect(await manager.GetLockoutEnabledAsync(user));
 
-			manager.SetLockoutEnabled(user.Id, false);
-			Expect(manager.GetLockoutEnabled(user.Id), Is.False);
+			await manager.SetLockoutEnabledAsync(user, false);
+			Expect(await manager.GetLockoutEnabledAsync(user), Is.False);
 		}
 	}
 }

@@ -1,54 +1,55 @@
 ﻿namespace IntegrationTests
 {
 	using System.Linq;
-	using AspNet.Identity.MongoDB;
-	using Microsoft.AspNet.Identity;
+	using System.Threading.Tasks;
+	using Microsoft.AspNetCore.Identity;
+	using Microsoft.AspNetCore.Identity.MongoDB;
 	using NUnit.Framework;
 
 	[TestFixture]
 	public class UserLoginStoreTests : UserIntegrationTestsBase
 	{
 		[Test]
-		public void AddLogin_NewLogin_Adds()
+		public async Task AddLogin_NewLogin_Adds()
 		{
 			var manager = GetUserManager();
-			var login = new UserLoginInfo("provider", "key");
+			// todo what's this new displayName for userLoginInfo
+			var login = new UserLoginInfo("provider", "key", "name");
 			var user = new IdentityUser {UserName = "bob"};
-			manager.Create(user);
+			await manager.CreateAsync(user);
 
-			manager.AddLogin(user.Id, login);
+			await manager.AddLoginAsync(user, login);
 
 			var savedLogin = Users.FindAll().Single().Logins.Single();
 			Expect(savedLogin.LoginProvider, Is.EqualTo("provider"));
 			Expect(savedLogin.ProviderKey, Is.EqualTo("key"));
 		}
 
-
 		[Test]
-		public void RemoveLogin_NewLogin_Removes()
+		public async Task RemoveLogin_NewLogin_Removes()
 		{
 			var manager = GetUserManager();
-			var login = new UserLoginInfo("provider", "key");
+			var login = new UserLoginInfo("provider", "key", "name");
 			var user = new IdentityUser {UserName = "bob"};
-			manager.Create(user);
-			manager.AddLogin(user.Id, login);
+			await manager.CreateAsync(user);
+			await manager.AddLoginAsync(user, login);
 
-			manager.RemoveLogin(user.Id, login);
+			await manager.RemoveLoginAsync(user, login.LoginProvider, login.ProviderKey);
 
 			var savedUser = Users.FindAll().Single();
 			Expect(savedUser.Logins, Is.Empty);
 		}
 
 		[Test]
-		public void GetLogins_OneLogin_ReturnsLogin()
+		public async Task GetLogins_OneLogin_ReturnsLogin()
 		{
 			var manager = GetUserManager();
-			var login = new UserLoginInfo("provider", "key");
+			var login = new UserLoginInfo("provider", "key", "name");
 			var user = new IdentityUser {UserName = "bob"};
-			manager.Create(user);
-			manager.AddLogin(user.Id, login);
+			await manager.CreateAsync(user);
+			await manager.AddLoginAsync(user, login);
 
-			var logins = manager.GetLogins(user.Id);
+			var logins = await manager.GetLoginsAsync(user);
 
 			var savedLogin = logins.Single();
 			Expect(savedLogin.LoginProvider, Is.EqualTo("provider"));
@@ -56,43 +57,43 @@
 		}
 
 		[Test]
-		public void Find_UserWithLogin_FindsUser()
+		public async Task Find_UserWithLogin_FindsUser()
 		{
 			var manager = GetUserManager();
-			var login = new UserLoginInfo("provider", "key");
+			var login = new UserLoginInfo("provider", "key", "name");
 			var user = new IdentityUser {UserName = "bob"};
-			manager.Create(user);
-			manager.AddLogin(user.Id, login);
+			await manager.CreateAsync(user);
+			await manager.AddLoginAsync(user, login);
 
-			var findUser = manager.Find(login);
+			var findUser = manager.FindByLoginAsync(login.LoginProvider, login.ProviderKey);
 
 			Expect(findUser, Is.Not.Null);
 		}
 
 		[Test]
-		public void Find_UserWithDifferentKey_DoesNotFindUser()
+		public async Task Find_UserWithDifferentKey_DoesNotFindUser()
 		{
 			var manager = GetUserManager();
-			var login = new UserLoginInfo("provider", "key");
+			var login = new UserLoginInfo("provider", "key", "name");
 			var user = new IdentityUser {UserName = "bob"};
-			manager.Create(user);
-			manager.AddLogin(user.Id, login);
+			await manager.CreateAsync(user);
+			await manager.AddLoginAsync(user, login);
 
-			var findUser = manager.Find(new UserLoginInfo("provider", "otherkey"));
+			var findUser = await manager.FindByLoginAsync("provider", "otherkey");
 
 			Expect(findUser, Is.Null);
 		}
 
 		[Test]
-		public void Find_UserWithDifferentProvider_DoesNotFindUser()
+		public async Task Find_UserWithDifferentProvider_DoesNotFindUser()
 		{
 			var manager = GetUserManager();
-			var login = new UserLoginInfo("provider", "key");
+			var login = new UserLoginInfo("provider", "key", "name");
 			var user = new IdentityUser {UserName = "bob"};
-			manager.Create(user);
-			manager.AddLogin(user.Id, login);
+			await manager.CreateAsync(user);
+			await manager.AddLoginAsync(user, login);
 
-			var findUser = manager.Find(new UserLoginInfo("otherprovider", "key"));
+			var findUser = await manager.FindByLoginAsync("otherprovider", "key");
 
 			Expect(findUser, Is.Null);
 		}

@@ -1,6 +1,7 @@
 ﻿namespace IntegrationTests
 {
 	using System;
+	using Microsoft.AspNetCore.Builder;
 	using Microsoft.AspNetCore.Identity;
 	using Microsoft.AspNetCore.Identity.MongoDB;
 	using Microsoft.Extensions.DependencyInjection;
@@ -46,12 +47,13 @@
 		protected RoleManager<IdentityRole> GetRoleManager()
 			=> ServiceProvider.GetService<RoleManager<IdentityRole>>();
 
-		protected IServiceProvider CreateServiceProvider<TUser, TRole>()
+		protected IServiceProvider CreateServiceProvider<TUser, TRole>(Action<IdentityOptions> optionsProvider = null)
 			where TUser : IdentityUser
 			where TRole : IdentityRole
 		{
 			var services = new ServiceCollection();
-			services.AddIdentity<TUser, TRole>()
+			optionsProvider = optionsProvider ?? (options => { });
+			services.AddIdentity<TUser, TRole>(optionsProvider)
 				.AddDefaultTokenProviders();
 
 			var roles = DatabaseNewApi.GetCollection<TRole>("roles");

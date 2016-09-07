@@ -1,4 +1,4 @@
-﻿namespace AspNet.Identity.MongoDB
+﻿namespace Microsoft.AspNetCore.Identity.MongoDB
 {
 	using System.Security.Claims;
 

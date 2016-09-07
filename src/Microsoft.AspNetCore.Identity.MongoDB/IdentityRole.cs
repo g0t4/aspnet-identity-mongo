@@ -1,10 +1,9 @@
-﻿namespace AspNet.Identity.MongoDB
+﻿namespace Microsoft.AspNetCore.Identity.MongoDB
 {
 	using global::MongoDB.Bson;
 	using global::MongoDB.Bson.Serialization.Attributes;
-	using Microsoft.AspNet.Identity;
 
-	public class IdentityRole : IRole<string>
+	public class IdentityRole
 	{
 		public IdentityRole()
 		{
@@ -20,5 +19,8 @@
 		public string Id { get; private set; }
 
 		public string Name { get; set; }
+
+		// todo
+		public string NormalizedName { get; set; }
 	}
 }

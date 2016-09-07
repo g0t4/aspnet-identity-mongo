@@ -1,100 +1,99 @@
 ﻿namespace IntegrationTests
 {
 	using System.Linq;
-	using AspNet.Identity.MongoDB;
-	using Microsoft.AspNet.Identity;
+	using System.Threading.Tasks;
+	using Microsoft.AspNetCore.Identity.MongoDB;
 	using MongoDB.Bson;
 	using NUnit.Framework;
-	using Tests;
 
 	[TestFixture]
 	public class UserStoreTests : UserIntegrationTestsBase
 	{
 		[Test]
-		public void Create_NewUser_Saves()
+		public async Task Create_NewUser_Saves()
 		{
 			var userName = "name";
 			var user = new IdentityUser {UserName = userName};
 			var manager = GetUserManager();
 
-			manager.Create(user);
+			await manager.CreateAsync(user);
 
 			var savedUser = Users.FindAll().Single();
 			Expect(savedUser.UserName, Is.EqualTo(user.UserName));
 		}
 
 		[Test]
-		public void FindByName_SavedUser_ReturnsUser()
+		public async Task FindByName_SavedUser_ReturnsUser()
 		{
 			var userName = "name";
 			var user = new IdentityUser {UserName = userName};
 			var manager = GetUserManager();
-			manager.Create(user);
+			await manager.CreateAsync(user);
 
-			var foundUser = manager.FindByName(userName);
+			var foundUser = await manager.FindByNameAsync(userName);
 
 			Expect(foundUser, Is.Not.Null);
 			Expect(foundUser.UserName, Is.EqualTo(userName));
 		}
 
 		[Test]
-		public void FindByName_NoUser_ReturnsNull()
+		public async Task FindByName_NoUser_ReturnsNull()
 		{
 			var manager = GetUserManager();
 
-			var foundUser = manager.FindByName("nouserbyname");
+			var foundUser = await manager.FindByNameAsync("nouserbyname");
 
 			Expect(foundUser, Is.Null);
 		}
 
 		[Test]
-		public void FindById_SavedUser_ReturnsUser()
+		public async Task FindById_SavedUser_ReturnsUser()
 		{
 			var userId = ObjectId.GenerateNewId().ToString();
 			var user = new IdentityUser {UserName = "name"};
-			user.SetId(userId);
+			user.Id = userId;
 			var manager = GetUserManager();
-			manager.Create(user);
+			await manager.CreateAsync(user);
 
-			var foundUser = manager.FindById(userId);
+			var foundUser = await manager.FindByIdAsync(userId);
 
 			Expect(foundUser, Is.Not.Null);
 			Expect(foundUser.Id, Is.EqualTo(userId));
 		}
 
 		[Test]
-		public void FindById_NoUser_ReturnsNull()
+		public async Task FindById_NoUser_ReturnsNull()
 		{
 			var manager = GetUserManager();
 
-			var foundUser = manager.FindById(ObjectId.GenerateNewId().ToString());
+			var foundUser = await manager.FindByIdAsync(ObjectId.GenerateNewId().ToString());
 
 			Expect(foundUser, Is.Null);
 		}
 
 		[Test]
-		public void Delete_ExistingUser_Removes()
+		public async Task Delete_ExistingUser_Removes()
 		{
 			var user = new IdentityUser {UserName = "name"};
 			var manager = GetUserManager();
-			manager.Create(user);
+			await manager.CreateAsync(user);
 			Expect(Users.FindAll(), Is.Not.Empty);
 
-			manager.Delete(user);
+			await manager.DeleteAsync(user);
 
 			Expect(Users.FindAll(), Is.Empty);
 		}
 
 		[Test]
-		public void Update_ExistingUser_Updates()
+		public async Task Update_ExistingUser_Updates()
 		{
 			var user = new IdentityUser {UserName = "name"};
 			var manager = GetUserManager();
-			manager.Create(user);
-			var savedUser = manager.FindById(user.Id);
+			await manager.CreateAsync(user);
+			var savedUser = await manager.FindByIdAsync(user.Id);
 			savedUser.UserName = "newname";
 
-			manager.Update(savedUser);
+			await manager.UpdateAsync(savedUser);
 
 			var changedUser = Users.FindAll().Single();
 			Expect(changedUser, Is.Not.Null);

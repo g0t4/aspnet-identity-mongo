@@ -1,47 +1,58 @@
 ﻿namespace IntegrationTests
 {
 	using System.Linq;
-	using AspNet.Identity.MongoDB;
-	using Microsoft.AspNet.Identity;
+	using System.Threading.Tasks;
+	using Microsoft.AspNetCore.Identity;
+	using Microsoft.AspNetCore.Identity.MongoDB;
+	using Microsoft.Extensions.DependencyInjection;
 	using NUnit.Framework;
 
 	[TestFixture]
 	public class UserPasswordStoreTests : UserIntegrationTestsBase
 	{
 		[Test]
-		public void HasPassword_NoPassword_ReturnsFalse()
+		public async Task HasPassword_NoPassword_ReturnsFalse()
 		{
 			var user = new IdentityUser {UserName = "bob"};
 			var manager = GetUserManager();
-			manager.Create(user);
+			await manager.CreateAsync(user);
 
-			var hasPassword = manager.HasPassword(user.Id);
+			var hasPassword = await manager.HasPasswordAsync(user);
 
 			Expect(hasPassword, Is.False);
 		}
 
 		[Test]
-		public void AddPassword_NewPassword_CanFindUserByPassword()
+		public async Task AddPassword_NewPassword_CanFindUserByPassword()
 		{
 			var user = new IdentityUser {UserName = "bob"};
-			var manager = GetUserManager();
-			manager.Create(user);
+			var manager = CreateServiceProvider<IdentityUser, IdentityRole>(options =>
+				{
+					options.Password.RequireDigit = false;
+					options.Password.RequireNonAlphanumeric = false;
+					options.Password.RequireUppercase = false;
+				})
+				.GetService<UserManager<IdentityUser>>();
+			await manager.CreateAsync(user);
 
-			manager.AddPassword(user.Id, "testtest");
+			var result = await manager.AddPasswordAsync(user, "testtest");
+			Expect(result.Succeeded, Is.True);
 
-			var findUserByPassword = manager.Find("bob", "testtest");
-			Expect(findUserByPassword, Is.Not.Null);
+			var userByName = await manager.FindByNameAsync("bob");
+			Expect(userByName, Is.Not.Null);
+			var passwordIsValid = await manager.CheckPasswordAsync(userByName, "testtest");
+			Expect(passwordIsValid, Is.True);
 		}
 
 		[Test]
-		public void RemovePassword_UserWithPassword_SetsPasswordNull()
+		public async Task RemovePassword_UserWithPassword_SetsPasswordNull()
 		{
 			var user = new IdentityUser {UserName = "bob"};
 			var manager = GetUserManager();
-			manager.Create(user);
-			manager.AddPassword(user.Id, "testtest");
+			await manager.CreateAsync(user);
+			await manager.AddPasswordAsync(user, "testtest");
 
-			manager.RemovePassword(user.Id);
+			await manager.RemovePasswordAsync(user);
 
 			var savedUser = Users.FindAll().Single();
 			Expect(savedUser.PasswordHash, Is.Null);

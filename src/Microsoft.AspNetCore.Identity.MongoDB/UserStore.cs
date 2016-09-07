@@ -74,17 +74,17 @@
 			=> user.NormalizedUserName;
 
 		// todo testing
-		public virtual async Task SetNormalizedUserNameAsync(TUser user, string normalizedName, CancellationToken cancellationToken)
-			=> user.NormalizedUserName = normalizedName;
+		public virtual async Task SetNormalizedUserNameAsync(TUser user, string normalizedUserName, CancellationToken cancellationToken)
+			=> user.NormalizedUserName = normalizedUserName;
 
 		// todo testing
 		public virtual Task<TUser> FindByIdAsync(string userId, CancellationToken token)
 			=> _Users.Find(u => u.Id == userId).FirstOrDefaultAsync(token);
 
-		public virtual Task<TUser> FindByNameAsync(string userName, CancellationToken token)
+		public virtual Task<TUser> FindByNameAsync(string normalizedUserName, CancellationToken token)
 			// todo test fails with normalized?
 			// todo exception on duplicates? or better to enforce unique index to ensure this
-			=> _Users.Find(u => u.UserName == userName).FirstOrDefaultAsync(token);
+			=> _Users.Find(u => u.NormalizedUserName == normalizedUserName).FirstOrDefaultAsync(token);
 
 		public virtual async Task SetPasswordHashAsync(TUser user, string passwordHash, CancellationToken token)
 			=> user.PasswordHash = passwordHash;
@@ -95,21 +95,21 @@
 		public virtual async Task<bool> HasPasswordAsync(TUser user, CancellationToken token)
 			=> user.HasPassword();
 
-		public virtual async Task AddToRoleAsync(TUser user, string roleName, CancellationToken token)
-			=> user.AddRole(roleName);
+		public virtual async Task AddToRoleAsync(TUser user, string normalizedRoleName, CancellationToken token)
+			=> user.AddRole(normalizedRoleName);
 
-		public virtual async Task RemoveFromRoleAsync(TUser user, string roleName, CancellationToken token)
-			=> user.RemoveRole(roleName);
+		public virtual async Task RemoveFromRoleAsync(TUser user, string normalizedRoleName, CancellationToken token)
+			=> user.RemoveRole(normalizedRoleName);
 
-		public virtual Task<IList<string>> GetRolesAsync(TUser user, CancellationToken token)
-			=> Task.FromResult((IList<string>) user.Roles);
+		public virtual async Task<IList<string>> GetRolesAsync(TUser user, CancellationToken token)
+			=> user.Roles;
 
-		public virtual Task<bool> IsInRoleAsync(TUser user, string roleName, CancellationToken token)
-			=> Task.FromResult(user.Roles.Contains(roleName));
+		public virtual async Task<bool> IsInRoleAsync(TUser user, string normalizedRoleName, CancellationToken token)
+			=> user.Roles.Contains(normalizedRoleName);
 
 		// todo testing
-		public virtual async Task<IList<TUser>> GetUsersInRoleAsync(string roleName, CancellationToken token)
-			=> await _Users.Find(u => u.Roles.Contains(roleName))
+		public virtual async Task<IList<TUser>> GetUsersInRoleAsync(string normalizedRoleName, CancellationToken token)
+			=> await _Users.Find(u => u.Roles.Contains(normalizedRoleName))
 				.ToListAsync(token);
 
 		public virtual async Task AddLoginAsync(TUser user, UserLoginInfo login, CancellationToken token)
@@ -132,27 +132,17 @@
 		public virtual async Task<string> GetSecurityStampAsync(TUser user, CancellationToken token)
 			=> user.SecurityStamp;
 
-		public virtual Task<bool> GetEmailConfirmedAsync(TUser user, CancellationToken token)
-		{
-			return Task.FromResult(user.EmailConfirmed);
-		}
+		public virtual async Task<bool> GetEmailConfirmedAsync(TUser user, CancellationToken token)
+			=> user.EmailConfirmed;
 
-		public virtual Task SetEmailConfirmedAsync(TUser user, bool confirmed, CancellationToken token)
-		{
-			user.EmailConfirmed = confirmed;
-			return Task.FromResult(0);
-		}
+		public virtual async Task SetEmailConfirmedAsync(TUser user, bool confirmed, CancellationToken token)
+			=> user.EmailConfirmed = confirmed;
 
-		public virtual Task SetEmailAsync(TUser user, string email, CancellationToken token)
-		{
-			user.Email = email;
-			return Task.FromResult(0);
-		}
+		public virtual async Task SetEmailAsync(TUser user, string email, CancellationToken token)
+			=> user.Email = email;
 
-		public virtual Task<string> GetEmailAsync(TUser user, CancellationToken token)
-		{
-			return Task.FromResult(user.Email);
-		}
+		public virtual async Task<string> GetEmailAsync(TUser user, CancellationToken token)
+			=> user.Email;
 
 		// todo testing
 		public virtual async Task<string> GetNormalizedEmailAsync(TUser user, CancellationToken cancellationToken)
@@ -162,11 +152,11 @@
 		public virtual async Task SetNormalizedEmailAsync(TUser user, string normalizedEmail, CancellationToken cancellationToken)
 			=> user.NormalizedEmail = normalizedEmail;
 
-		public virtual Task<TUser> FindByEmailAsync(string email, CancellationToken token)
+		public virtual Task<TUser> FindByEmailAsync(string normalizedEmail, CancellationToken token)
 		{
 			// todo I don't like that this now searches on normalized email :(... why not FindByNormalizedEmailAsync then?
 			// todo what if a user can have multiple accounts with the same email?
-			return _Users.Find(u => u.NormalizedEmail == email).FirstOrDefaultAsync(token);
+			return _Users.Find(u => u.NormalizedEmail == normalizedEmail).FirstOrDefaultAsync(token);
 		}
 
 		public virtual async Task<IList<Claim>> GetClaimsAsync(TUser user, CancellationToken token)

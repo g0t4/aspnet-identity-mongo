@@ -1,35 +1,35 @@
 ﻿namespace IntegrationTests
 {
-	using AspNet.Identity.MongoDB;
-	using Microsoft.AspNet.Identity;
+	using System.Threading.Tasks;
+	using Microsoft.AspNetCore.Identity.MongoDB;
 	using NUnit.Framework;
 
 	[TestFixture]
 	public class UserTwoFactorStoreTests : UserIntegrationTestsBase
 	{
 		[Test]
-		public void SetTwoFactorEnabled()
+		public async Task SetTwoFactorEnabled()
 		{
 			var user = new IdentityUser {UserName = "bob"};
 			var manager = GetUserManager();
-			manager.Create(user);
+			await manager.CreateAsync(user);
 
-			manager.SetTwoFactorEnabled(user.Id, true);
+			await manager.SetTwoFactorEnabledAsync(user, true);
 
-			Expect(manager.GetTwoFactorEnabled(user.Id));
+			Expect(await manager.GetTwoFactorEnabledAsync(user));
 		}
 
 		[Test]
-		public void ClearTwoFactorEnabled_PreviouslyEnabled_NotEnabled()
+		public async Task ClearTwoFactorEnabled_PreviouslyEnabled_NotEnabled()
 		{
 			var user = new IdentityUser {UserName = "bob"};
 			var manager = GetUserManager();
-			manager.Create(user);
-			manager.SetTwoFactorEnabled(user.Id, true);
+			await manager.CreateAsync(user);
+			await manager.SetTwoFactorEnabledAsync(user, true);
 
-			manager.SetTwoFactorEnabled(user.Id, false);
+			await manager.SetTwoFactorEnabledAsync(user, false);
 
-			Expect(manager.GetTwoFactorEnabled(user.Id), Is.False);
+			Expect(await manager.GetTwoFactorEnabledAsync(user), Is.False);
 		}
 	}
 }

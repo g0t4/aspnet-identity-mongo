@@ -1,7 +1,7 @@
 ﻿namespace IntegrationTests
 {
-	using AspNet.Identity.MongoDB;
-	using Microsoft.AspNet.Identity;
+	using System.Threading.Tasks;
+	using Microsoft.AspNetCore.Identity.MongoDB;
 	using NUnit.Framework;
 
 	[TestFixture]
@@ -10,42 +10,42 @@
 		private const string PhoneNumber = "1234567890";
 
 		[Test]
-		public void SetPhoneNumber_StoresPhoneNumber()
+		public async Task SetPhoneNumber_StoresPhoneNumber()
 		{
 			var user = new IdentityUser {UserName = "bob"};
 			var manager = GetUserManager();
-			manager.Create(user);
+			await manager.CreateAsync(user);
 
-			manager.SetPhoneNumber(user.Id, PhoneNumber);
+			await manager.SetPhoneNumberAsync(user, PhoneNumber);
 
-			Expect(manager.GetPhoneNumber(user.Id), Is.EqualTo(PhoneNumber));
+			Expect(await manager.GetPhoneNumberAsync(user), Is.EqualTo(PhoneNumber));
 		}
 
 		[Test]
-		public void ConfirmPhoneNumber_StoresPhoneNumberConfirmed()
+		public async Task ConfirmPhoneNumber_StoresPhoneNumberConfirmed()
 		{
 			var user = new IdentityUser {UserName = "bob"};
 			var manager = GetUserManager();
-			manager.Create(user);
-			var token = manager.GenerateChangePhoneNumberToken(user.Id, PhoneNumber);
+			await manager.CreateAsync(user);
+			var token = await manager.GenerateChangePhoneNumberTokenAsync(user, PhoneNumber);
 
-			manager.ChangePhoneNumber(user.Id, PhoneNumber, token);
+			await manager.ChangePhoneNumberAsync(user, PhoneNumber, token);
 
-			Expect(manager.IsPhoneNumberConfirmed(user.Id));
+			Expect(await manager.IsPhoneNumberConfirmedAsync(user));
 		}
 
 		[Test]
-		public void ChangePhoneNumber_OriginalPhoneNumberWasConfirmed_NotPhoneNumberConfirmed()
+		public async Task ChangePhoneNumber_OriginalPhoneNumberWasConfirmed_NotPhoneNumberConfirmed()
 		{
 			var user = new IdentityUser {UserName = "bob"};
 			var manager = GetUserManager();
-			manager.Create(user);
-			var token = manager.GenerateChangePhoneNumberToken(user.Id, PhoneNumber);
-			manager.ChangePhoneNumber(user.Id, PhoneNumber, token);
+			await manager.CreateAsync(user);
+			var token = await manager.GenerateChangePhoneNumberTokenAsync(user, PhoneNumber);
+			await manager.ChangePhoneNumberAsync(user, PhoneNumber, token);
 
-			manager.SetPhoneNumber(user.Id, PhoneNumber);
+			await manager.SetPhoneNumberAsync(user, PhoneNumber);
 
-			Expect(manager.IsPhoneNumberConfirmed(user.Id), Is.False);
+			Expect(await manager.IsPhoneNumberConfirmedAsync(user), Is.False);
 		}
 	}
 }

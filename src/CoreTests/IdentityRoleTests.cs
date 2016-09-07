@@ -11,7 +11,6 @@
 		public void ToBsonDocument_IdAssigned_MapsToBsonObjectId()
 		{
 			var role = new IdentityRole();
-			role.SetId(ObjectId.GenerateNewId().ToString());
 
 			var document = role.ToBsonDocument();
 

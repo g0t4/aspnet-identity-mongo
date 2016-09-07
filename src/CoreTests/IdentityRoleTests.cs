@@ -1,6 +1,6 @@
 ﻿namespace Tests
 {
-	using AspNet.Identity.MongoDB;
+	using Microsoft.AspNetCore.Identity.MongoDB;
 	using MongoDB.Bson;
 	using NUnit.Framework;
 

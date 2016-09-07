@@ -1,7 +1,7 @@
 ﻿namespace Tests
 {
 	using System.Security.Claims;
-	using AspNet.Identity.MongoDB;
+	using Microsoft.AspNetCore.Identity.MongoDB;
 	using NUnit.Framework;
 
 	[TestFixture]

@@ -44,15 +44,20 @@
 			return IdentityResult.Success;
 		}
 
-		public virtual async Task<string> GetRoleIdAsync(TRole role, CancellationToken cancellationToken) => role.Id;
+		public virtual async Task<string> GetRoleIdAsync(TRole role, CancellationToken cancellationToken)
+			=> role.Id;
 
-		public virtual async Task<string> GetRoleNameAsync(TRole role, CancellationToken cancellationToken) => role.Name;
+		public virtual async Task<string> GetRoleNameAsync(TRole role, CancellationToken cancellationToken)
+			=> role.Name;
 
-		public virtual async Task SetRoleNameAsync(TRole role, string roleName, CancellationToken cancellationToken) => role.Name = roleName;
+		public virtual async Task SetRoleNameAsync(TRole role, string roleName, CancellationToken cancellationToken)
+			=> role.Name = roleName;
 
-		public virtual async Task<string> GetNormalizedRoleNameAsync(TRole role, CancellationToken cancellationToken) => role.NormalizedName;
+		public virtual async Task<string> GetNormalizedRoleNameAsync(TRole role, CancellationToken cancellationToken)
+			=> role.NormalizedName;
 
-		public virtual async Task SetNormalizedRoleNameAsync(TRole role, string normalizedName, CancellationToken cancellationToken) => role.NormalizedName = normalizedName;
+		public virtual async Task SetNormalizedRoleNameAsync(TRole role, string normalizedName, CancellationToken cancellationToken)
+			=> role.NormalizedName = normalizedName;
 
 		public virtual Task<TRole> FindByIdAsync(string roleId, CancellationToken token)
 		{

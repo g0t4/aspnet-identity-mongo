@@ -1,7 +1,9 @@
-﻿{
+{
   "version": "1.0.0-*",
 
   "dependencies": {
+    "Microsoft.AspNetCore.Identity": "1.0.0",
+    "MongoDB.Driver": "2.3.0-rc1",
     "NETStandard.Library": "1.6.0"
   },
 

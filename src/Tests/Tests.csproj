@@ -76,12 +76,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\AspNet.Identity.MongoDB\AspNet.Identity.MongoDB.csproj">
-      <Project>{AD64128A-6855-49F7-A846-1FCDAD368C55}</Project>
-      <Name>AspNet.Identity.MongoDB</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

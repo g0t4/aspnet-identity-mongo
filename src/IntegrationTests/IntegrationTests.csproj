@@ -88,10 +88,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AspNet.Identity.MongoDB\AspNet.Identity.MongoDB.csproj">
-      <Project>{AD64128A-6855-49F7-A846-1FCDAD368C55}</Project>
-      <Name>AspNet.Identity.MongoDB</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Tests\Tests.csproj">
       <Project>{62483144-11D8-4ECE-990D-17B4716AFF69}</Project>
       <Name>Tests</Name>

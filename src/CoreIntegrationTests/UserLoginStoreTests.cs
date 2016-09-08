@@ -23,6 +23,8 @@
 			var savedLogin = Users.FindAll().Single().Logins.Single();
 			Expect(savedLogin.LoginProvider, Is.EqualTo("provider"));
 			Expect(savedLogin.ProviderKey, Is.EqualTo("key"));
+			// todo test displayname, what about migrating this?
+			Expect(savedLogin.ProviderDisplayName, Is.EqualTo("name"));
 		}
 
 		[Test]
@@ -54,6 +56,7 @@
 			var savedLogin = logins.Single();
 			Expect(savedLogin.LoginProvider, Is.EqualTo("provider"));
 			Expect(savedLogin.ProviderKey, Is.EqualTo("key"));
+			// todo name
 		}
 
 		[Test]

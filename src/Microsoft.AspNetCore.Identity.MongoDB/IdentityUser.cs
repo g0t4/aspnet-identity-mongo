@@ -67,6 +67,9 @@
 		[BsonIgnoreIfNull]
 		public virtual string PasswordHash { get; set; }
 
+
+		// todo move to a type I manage - and check for changes to UserLoginInfo for migration purposes
+		// todo I know that displayName was added
 		[BsonIgnoreIfNull]
 		public virtual List<UserLoginInfo> Logins { get; set; }
 

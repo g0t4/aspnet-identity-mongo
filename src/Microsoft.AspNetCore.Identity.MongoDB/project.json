@@ -1,5 +1,35 @@
 {
+  "name": "Microsoft.AspNetCore.Identity.MongoDB",
   "version": "1.0.0-*",
+
+  "description":
+    "A MongoDB provider for ASP.NET Core Identity. NET Core Identity fwk. My aim is to ensure this project is well tested and configurable.",
+
+  "authors": ["Wes Higbee"],
+
+  "buildOptions": {
+    "warningsAsErrors": true
+  },
+
+  "packOptions": {
+    "summary": "A MongoDB provider for ASP.NET Core Identity",
+    "owners": ["Wes Higbee"],
+    "releaseNotes": "Port of AspNet.Identity.MongoDB to ASP.NET Core",
+
+    "tags": [
+      "aspnetcore",
+      "mongo",
+      "mongodb",
+      "identity",
+      "membership"
+    ],
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/g0t4/aspnet-identity-mongo"
+    },
+    "licenseUrl": "https://github.com/g0t4/aspnet-identity-mongo/blob/master/LICENSE",
+    "projectUrl": "https://github.com/g0t4/aspnet-identity-mongo"
+  },
 
   "dependencies": {
     "Microsoft.AspNetCore.Identity": "1.0.0",
@@ -9,7 +39,7 @@
 
   "frameworks": {
     "netstandard1.5": {
-      "imports": "dnxcore50"
+    
     }
   }
 }

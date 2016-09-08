@@ -1,4 +1,8 @@
-﻿namespace Microsoft.AspNetCore.Identity.MongoDB
+﻿
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+// I'm using async methods to leverage implicit Task wrapping of results from expression bodied functions.
+
+namespace Microsoft.AspNetCore.Identity.MongoDB
 {
 	using System.Linq;
 	using System.Threading;
@@ -9,8 +13,9 @@
 	///     Note: Deleting and updating do not modify the roles stored on a user document. If you desire this dynamic
 	///     capability, override the appropriate operations on RoleStore as desired for your application. For example you could
 	///     perform a document modification on the users collection before a delete or a rename.
+	///     When passing a cancellation token, it will only be used if the operation requires a database interaction.
 	/// </summary>
-	/// <typeparam name="TRole"></typeparam>
+	/// <typeparam name="TRole">Needs to extend the provided IdentityRole type.</typeparam>
 	public class RoleStore<TRole> : IRoleStore<TRole>, IQueryableRoleStore<TRole>
 		where TRole : IdentityRole
 	{
@@ -35,12 +40,14 @@
 		public virtual async Task<IdentityResult> UpdateAsync(TRole role, CancellationToken token)
 		{
 			await _Roles.ReplaceOneAsync(r => r.Id == role.Id, role, cancellationToken: token);
+			// todo result based on replace result
 			return IdentityResult.Success;
 		}
 
 		public virtual async Task<IdentityResult> DeleteAsync(TRole role, CancellationToken token)
 		{
-			await _Roles.DeleteOneAsync(r => r.Id == role.Id, cancellationToken: token);
+			await _Roles.DeleteOneAsync(r => r.Id == role.Id, token);
+			// todo result based on delete result
 			return IdentityResult.Success;
 		}
 
@@ -60,16 +67,12 @@
 			=> role.NormalizedName = normalizedName;
 
 		public virtual Task<TRole> FindByIdAsync(string roleId, CancellationToken token)
-		{
-			return _Roles.Find(r => r.Id == roleId).FirstOrDefaultAsync(token);
-		}
+			=> _Roles.Find(r => r.Id == roleId).FirstOrDefaultAsync(token);
 
 		public virtual Task<TRole> FindByNameAsync(string roleName, CancellationToken token)
-		{
-			// todo thoughts on searching now by normalized name without changing api...
-			return _Roles.Find(r => r.NormalizedName == roleName).FirstOrDefaultAsync(token);
-		}
+			=> _Roles.Find(r => r.NormalizedName == roleName).FirstOrDefaultAsync(token);
 
-		public virtual IQueryable<TRole> Roles => _Roles.AsQueryable();
+		public virtual IQueryable<TRole> Roles
+			=> _Roles.AsQueryable();
 	}
 }

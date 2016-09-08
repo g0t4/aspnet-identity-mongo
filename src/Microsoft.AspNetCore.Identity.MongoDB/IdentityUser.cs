@@ -20,17 +20,20 @@
 		}
 
 		[BsonRepresentation(BsonType.ObjectId)]
-		public string Id { get; set; }
+		public virtual string Id { get; set; }
 
-		public string UserName { get; set; }
+		public virtual string UserName { get; set; }
 
 		// todo what should we do with this in Mongo land
 		// https://github.com/aspnet/Identity/issues/351
+		// todo migration
 		public virtual string NormalizedUserName { get; set; }
 
 		public virtual string SecurityStamp { get; set; }
 
 		public virtual string Email { get; set; }
+
+		// todo migration
 		public virtual string NormalizedEmail { get; set; }
 
 		public virtual bool EmailConfirmed { get; set; }
@@ -41,6 +44,7 @@
 
 		public virtual bool TwoFactorEnabled { get; set; }
 
+		// todo migration
 		public virtual DateTimeOffset? LockoutEndDateUtc { get; set; }
 
 		public virtual bool LockoutEnabled { get; set; }
@@ -48,7 +52,7 @@
 		public virtual int AccessFailedCount { get; set; }
 
 		[BsonIgnoreIfNull]
-		public List<string> Roles { get; set; }
+		public virtual List<string> Roles { get; set; }
 
 		public virtual void AddRole(string role)
 		{
@@ -64,7 +68,7 @@
 		public virtual string PasswordHash { get; set; }
 
 		[BsonIgnoreIfNull]
-		public List<UserLoginInfo> Logins { get; set; }
+		public virtual List<UserLoginInfo> Logins { get; set; }
 
 		public virtual void AddLogin(UserLoginInfo login)
 		{
@@ -73,11 +77,7 @@
 
 		public virtual void RemoveLogin(string loginProvider, string providerKey)
 		{
-			var loginsToRemove = Logins
-				.Where(l => l.LoginProvider == loginProvider)
-				.Where(l => l.ProviderKey == providerKey);
-
-			Logins = Logins.Except(loginsToRemove).ToList();
+			Logins.RemoveAll(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey);
 		}
 
 		public virtual bool HasPassword()
@@ -86,7 +86,7 @@
 		}
 
 		[BsonIgnoreIfNull]
-		public List<IdentityUserClaim> Claims { get; set; }
+		public virtual List<IdentityUserClaim> Claims { get; set; }
 
 		public virtual void AddClaim(Claim claim)
 		{
@@ -95,14 +95,10 @@
 
 		public virtual void RemoveClaim(Claim claim)
 		{
-			var claimsToRemove = Claims
-				.Where(c => c.Type == claim.Type)
-				.Where(c => c.Value == claim.Value);
-
-			Claims = Claims.Except(claimsToRemove).ToList();
+			Claims.RemoveAll(c => c.Type == claim.Type && c.Value == claim.Value);
 		}
 
-		public void ReplaceClaim(Claim claim, Claim newClaim)
+		public virtual void ReplaceClaim(Claim claim, Claim newClaim)
 		{
 			var current = Claims
 				.FirstOrDefault(c => c.Type == claim.Type && c.Value == claim.Value);
@@ -116,12 +112,12 @@
 		}
 
 		[BsonIgnoreIfNull]
-		public List<IdentityUserToken> Tokens { get; set; }
+		public virtual List<IdentityUserToken> Tokens { get; set; }
 
 		private IdentityUserToken GetToken(string loginProider, string name)
 			=> Tokens.FirstOrDefault(t => t.LoginProvider == loginProider && t.Name == name);
 
-		// todo testing of tokens
+		// todo testing of tokens, what are these for?
 		public virtual void SetToken(string loginProider, string name, string value)
 		{
 			var existingToken = GetToken(loginProider, name);

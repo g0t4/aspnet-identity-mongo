@@ -1,4 +1,8 @@
-﻿namespace Microsoft.AspNetCore.Identity.MongoDB
+﻿
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+// I'm using async methods to leverage implicit Task wrapping of results from expression bodied functions.
+
+namespace Microsoft.AspNetCore.Identity.MongoDB
 {
 	using System;
 	using System.Collections.Generic;
@@ -9,8 +13,7 @@
 	using global::MongoDB.Driver;
 
 	/// <summary>
-	///     FYI as for methods with CancellationToken, unless a database op is involved the token is ignored as any in memory
-	///     ops to manipulate the object graph of a user, or query, are so fast that canellation is a waste of time.
+	///     When passing a cancellation token, it will only be used if the operation requires a database interaction.
 	/// </summary>
 	/// <typeparam name="TUser"></typeparam>
 	public class UserStore<TUser> : IUserPasswordStore<TUser>,
@@ -48,12 +51,14 @@
 		{
 			// todo should add an optimistic concurrency check
 			await _Users.ReplaceOneAsync(u => u.Id == user.Id, user, cancellationToken: token);
+			// todo success based on replace result
 			return IdentityResult.Success;
 		}
 
 		public virtual async Task<IdentityResult> DeleteAsync(TUser user, CancellationToken token)
 		{
 			await _Users.DeleteOneAsync(u => u.Id == user.Id, token);
+			// todo success based on delete result
 			return IdentityResult.Success;
 		}
 

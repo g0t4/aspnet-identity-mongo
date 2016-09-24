@@ -30,8 +30,8 @@
 		public virtual string NormalizedUserName { get; set; }
 
 		/// <summary>
-		/// A random value that must change whenever a users credentials change 
-		/// (password changed, login removed)
+		///     A random value that must change whenever a users credentials change
+		///     (password changed, login removed)
 		/// </summary>
 		public virtual string SecurityStamp { get; set; }
 
@@ -72,7 +72,6 @@
 		[BsonIgnoreIfNull]
 		public virtual string PasswordHash { get; set; }
 
-
 		// todo move to a type I manage - and check for changes to UserLoginInfo for migration purposes
 		// todo I know that displayName was added
 		[BsonIgnoreIfNull]
@@ -107,17 +106,16 @@
 			Claims.RemoveAll(c => c.Type == claim.Type && c.Value == claim.Value);
 		}
 
-		// todo testing?
-		public virtual void ReplaceClaim(Claim claim, Claim newClaim)
+		public virtual void ReplaceClaim(Claim existingClaim, Claim newClaim)
 		{
-			var current = Claims
-				.FirstOrDefault(c => c.Type == claim.Type && c.Value == claim.Value);
-			if (current == null)
+			var claimExists = Claims
+				.Any(c => c.Type == existingClaim.Type && c.Value == existingClaim.Value);
+			if (!claimExists)
 			{
-				//todo?
+				// note: nothing to update, ignore, no need to throw
 				return;
 			}
-			RemoveClaim(claim);
+			RemoveClaim(existingClaim);
 			AddClaim(newClaim);
 		}
 

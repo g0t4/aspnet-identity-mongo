@@ -182,7 +182,6 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 			return Task.FromResult(0);
 		}
 
-		// todo testing
 		public virtual async Task ReplaceClaimAsync(TUser user, Claim claim, Claim newClaim, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			user.ReplaceClaim(claim, newClaim);

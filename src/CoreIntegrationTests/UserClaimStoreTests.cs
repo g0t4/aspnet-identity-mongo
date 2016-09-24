@@ -5,6 +5,7 @@
 	using System.Threading.Tasks;
 	using Microsoft.AspNetCore.Identity.MongoDB;
 	using NUnit.Framework;
+	using Tests;
 
 	[TestFixture]
 	public class UserClaimStoreTests : UserIntegrationTestsBase
@@ -72,6 +73,22 @@
 			await manager.RemoveClaimAsync(user, new Claim("type", "otherValue"));
 
 			Expect(await manager.GetClaimsAsync(user), Is.Not.Empty);
+		}
+
+		[Test]
+		public async Task ReplaceClaim_Replaces()
+		{
+			// note: unit tests cover behavior of ReplaceClaim method on IdentityUser
+			var user = new IdentityUser {UserName = "bob"};
+			var manager = GetUserManager();
+			await manager.CreateAsync(user);
+			var existingClaim = new Claim("type", "value");
+			await manager.AddClaimAsync(user, existingClaim);
+			var newClaim = new Claim("newType", "newValue");
+
+			await manager.ReplaceClaimAsync(user, existingClaim, newClaim);
+
+			user.ExpectOnlyHasThisClaim(newClaim);
 		}
 	}
 }

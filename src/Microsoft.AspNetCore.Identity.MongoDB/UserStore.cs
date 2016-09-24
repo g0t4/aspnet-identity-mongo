@@ -129,11 +129,9 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 				.Find(u => u.Logins.Any(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey))
 				.FirstOrDefaultAsync(cancellationToken);
 
-		// todo testing?
 		public virtual async Task SetSecurityStampAsync(TUser user, string stamp, CancellationToken token)
 			=> user.SecurityStamp = stamp;
 
-		// todo testing?
 		public virtual async Task<string> GetSecurityStampAsync(TUser user, CancellationToken token)
 			=> user.SecurityStamp;
 
@@ -149,18 +147,17 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 		public virtual async Task<string> GetEmailAsync(TUser user, CancellationToken token)
 			=> user.Email;
 
-		// todo testing
+		// note: no way to intergation test as this isn't used by Identity framework	
 		public virtual async Task<string> GetNormalizedEmailAsync(TUser user, CancellationToken cancellationToken)
 			=> user.NormalizedEmail;
 
-		// todo testing
 		public virtual async Task SetNormalizedEmailAsync(TUser user, string normalizedEmail, CancellationToken cancellationToken)
 			=> user.NormalizedEmail = normalizedEmail;
 
 		public virtual Task<TUser> FindByEmailAsync(string normalizedEmail, CancellationToken token)
 		{
-			// todo I don't like that this now searches on normalized email :(... why not FindByNormalizedEmailAsync then?
-			// todo what if a user can have multiple accounts with the same email?
+			// note: I don't like that this now searches on normalized email :(... why not FindByNormalizedEmailAsync then?
+			// todo low - what if a user can have multiple accounts with the same email?
 			return _Users.Find(u => u.NormalizedEmail == normalizedEmail).FirstOrDefaultAsync(token);
 		}
 

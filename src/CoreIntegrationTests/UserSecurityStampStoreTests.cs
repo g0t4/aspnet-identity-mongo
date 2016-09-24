@@ -5,7 +5,6 @@
 	using Microsoft.AspNetCore.Identity.MongoDB;
 	using NUnit.Framework;
 
-	// todo low - validate all tests work
 	[TestFixture]
 	public class UserSecurityStampStoreTests : UserIntegrationTestsBase
 	{

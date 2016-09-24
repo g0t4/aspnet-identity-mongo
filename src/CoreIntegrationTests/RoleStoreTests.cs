@@ -79,5 +79,22 @@
 			Expect(changedRole, Is.Not.Null);
 			Expect(changedRole.Name, Is.EqualTo("newname"));
 		}
+
+		[Test]
+		public async Task SimpleAccessorsAndGetters()
+		{
+			var role = new IdentityRole
+			{
+				Name = "name"
+			};
+			var manager = GetRoleManager();
+			await manager.CreateAsync(role);
+
+			Expect(await manager.GetRoleIdAsync(role), Is.EqualTo(role.Id));
+			Expect(await manager.GetRoleNameAsync(role), Is.EqualTo("name"));
+
+			await manager.SetRoleNameAsync(role, "newName");
+			Expect(await manager.GetRoleNameAsync(role), Is.EqualTo("newName"));
+		}
 	}
 }

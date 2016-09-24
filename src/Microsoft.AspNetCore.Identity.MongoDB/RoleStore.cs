@@ -40,27 +40,24 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 
 		public virtual async Task<IdentityResult> UpdateAsync(TRole role, CancellationToken token)
 		{
-			await _Roles.ReplaceOneAsync(r => r.Id == role.Id, role, cancellationToken: token);
-			// todo result based on replace result
+			var result = await _Roles.ReplaceOneAsync(r => r.Id == role.Id, role, cancellationToken: token);
+			// todo low priority result based on replace result
 			return IdentityResult.Success;
 		}
 
 		public virtual async Task<IdentityResult> DeleteAsync(TRole role, CancellationToken token)
 		{
-			await _Roles.DeleteOneAsync(r => r.Id == role.Id, token);
-			// todo result based on delete result
+			var result = await _Roles.DeleteOneAsync(r => r.Id == role.Id, token);
+			// todo low priority result based on delete result
 			return IdentityResult.Success;
 		}
 
-		// todo testing?
 		public virtual async Task<string> GetRoleIdAsync(TRole role, CancellationToken cancellationToken)
 			=> role.Id;
 
-		// todo testing?
 		public virtual async Task<string> GetRoleNameAsync(TRole role, CancellationToken cancellationToken)
 			=> role.Name;
 
-		// todo testing?
 		public virtual async Task SetRoleNameAsync(TRole role, string roleName, CancellationToken cancellationToken)
 			=> role.Name = roleName;
 
@@ -72,7 +69,6 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 		public virtual async Task SetNormalizedRoleNameAsync(TRole role, string normalizedName, CancellationToken cancellationToken)
 			=> role.NormalizedName = normalizedName;
 
-		// todo testing?
 		public virtual Task<TRole> FindByIdAsync(string roleId, CancellationToken token)
 			=> _Roles.Find(r => r.Id == roleId)
 				.FirstOrDefaultAsync(token);

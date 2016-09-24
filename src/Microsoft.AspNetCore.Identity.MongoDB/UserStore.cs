@@ -115,15 +115,12 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 			=> await _Users.Find(u => u.Roles.Contains(normalizedRoleName))
 				.ToListAsync(token);
 
-		// todo testing?
 		public virtual async Task AddLoginAsync(TUser user, UserLoginInfo login, CancellationToken token)
 			=> user.AddLogin(login);
 
-		// todo testing?
 		public virtual async Task RemoveLoginAsync(TUser user, string loginProvider, string providerKey, CancellationToken cancellationToken = default(CancellationToken))
 			=> user.RemoveLogin(loginProvider, providerKey);
 
-		// todo testing?
 		public virtual async Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user, CancellationToken token)
 			=> user.Logins;
 

@@ -16,7 +16,8 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 	///     When passing a cancellation token, it will only be used if the operation requires a database interaction.
 	/// </summary>
 	/// <typeparam name="TUser"></typeparam>
-	public class UserStore<TUser> : IUserPasswordStore<TUser>,
+	public class UserStore<TUser> :
+			IUserPasswordStore<TUser>,
 			IUserRoleStore<TUser>,
 			IUserLoginStore<TUser>,
 			IUserSecurityStampStore<TUser>,
@@ -106,6 +107,10 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 		public virtual async Task RemoveFromRoleAsync(TUser user, string normalizedRoleName, CancellationToken token)
 			=> user.RemoveRole(normalizedRoleName);
 
+		// todo might have issue, I'm just storing Normalized only now, so I'm returning normalized here instead of not normalized.
+		// EF provider returns not noramlized here
+		// however, the rest of the API uses normalized (add/remove/isinrole) so maybe this approach is better anyways
+		// note: could always map normalized to not if people complain
 		public virtual async Task<IList<string>> GetRolesAsync(TUser user, CancellationToken token)
 			=> user.Roles;
 
@@ -117,23 +122,29 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 			=> await _Users.Find(u => u.Roles.Contains(normalizedRoleName))
 				.ToListAsync(token);
 
+		// todo testing?
 		public virtual async Task AddLoginAsync(TUser user, UserLoginInfo login, CancellationToken token)
 			=> user.AddLogin(login);
 
+		// todo testing?
 		public virtual async Task RemoveLoginAsync(TUser user, string loginProvider, string providerKey, CancellationToken cancellationToken = default(CancellationToken))
 			=> user.RemoveLogin(loginProvider, providerKey);
 
+		// todo testing?
 		public virtual async Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user, CancellationToken token)
 			=> user.Logins;
 
+		// todo testing?
 		public virtual Task<TUser> FindByLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken = default(CancellationToken))
 			=> _Users
 				.Find(u => u.Logins.Any(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey))
 				.FirstOrDefaultAsync(cancellationToken);
 
+		// todo testing?
 		public virtual async Task SetSecurityStampAsync(TUser user, string stamp, CancellationToken token)
 			=> user.SecurityStamp = stamp;
 
+		// todo testing?
 		public virtual async Task<string> GetSecurityStampAsync(TUser user, CancellationToken token)
 			=> user.SecurityStamp;
 
@@ -167,6 +178,7 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 		public virtual async Task<IList<Claim>> GetClaimsAsync(TUser user, CancellationToken token)
 			=> user.Claims.Select(c => c.ToSecurityClaim()).ToList();
 
+		// todo testing ok?
 		public virtual Task AddClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken token)
 		{
 			foreach (var claim in claims)
@@ -176,6 +188,7 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 			return Task.FromResult(0);
 		}
 
+		// todo testing ok?
 		public virtual Task RemoveClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken token)
 		{
 			foreach (var claim in claims)
@@ -224,6 +237,7 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 			return Task.FromResult(user.TwoFactorEnabled);
 		}
 
+		// todo testing
 		public virtual async Task<IList<TUser>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return await _Users
@@ -232,12 +246,14 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 				.ToListAsync(cancellationToken);
 		}
 
+		// todo testing?
 		public virtual Task<DateTimeOffset?> GetLockoutEndDateAsync(TUser user, CancellationToken token)
 		{
 			// todo migration?
 			return Task.FromResult(user.LockoutEndDateUtc);
 		}
 
+		// todo testing?
 		public virtual Task SetLockoutEndDateAsync(TUser user, DateTimeOffset? lockoutEnd, CancellationToken token)
 		{
 			user.LockoutEndDateUtc = lockoutEnd;
@@ -259,9 +275,11 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 		public virtual async Task<int> GetAccessFailedCountAsync(TUser user, CancellationToken token)
 			=> user.AccessFailedCount;
 
+		// todo testing?
 		public virtual async Task<bool> GetLockoutEnabledAsync(TUser user, CancellationToken token)
 			=> user.LockoutEnabled;
 
+		// todo testing?
 		public virtual async Task SetLockoutEnabledAsync(TUser user, bool enabled, CancellationToken token)
 			=> user.LockoutEnabled = enabled;
 

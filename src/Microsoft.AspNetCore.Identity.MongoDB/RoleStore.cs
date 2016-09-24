@@ -16,7 +16,8 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 	///     When passing a cancellation token, it will only be used if the operation requires a database interaction.
 	/// </summary>
 	/// <typeparam name="TRole">Needs to extend the provided IdentityRole type.</typeparam>
-	public class RoleStore<TRole> : IRoleStore<TRole>, IQueryableRoleStore<TRole>
+	public class RoleStore<TRole> : IQueryableRoleStore<TRole>
+		// todo IRoleClaimStore<TRole>
 		where TRole : IdentityRole
 	{
 		private readonly IMongoCollection<TRole> _Roles;
@@ -51,26 +52,35 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 			return IdentityResult.Success;
 		}
 
+		// todo testing?
 		public virtual async Task<string> GetRoleIdAsync(TRole role, CancellationToken cancellationToken)
 			=> role.Id;
 
+		// todo testing?
 		public virtual async Task<string> GetRoleNameAsync(TRole role, CancellationToken cancellationToken)
 			=> role.Name;
 
+		// todo testing?
 		public virtual async Task SetRoleNameAsync(TRole role, string roleName, CancellationToken cancellationToken)
 			=> role.Name = roleName;
 
+		// todo testing?
 		public virtual async Task<string> GetNormalizedRoleNameAsync(TRole role, CancellationToken cancellationToken)
 			=> role.NormalizedName;
 
+		// todo testing?
 		public virtual async Task SetNormalizedRoleNameAsync(TRole role, string normalizedName, CancellationToken cancellationToken)
 			=> role.NormalizedName = normalizedName;
 
+		// todo testing?
 		public virtual Task<TRole> FindByIdAsync(string roleId, CancellationToken token)
-			=> _Roles.Find(r => r.Id == roleId).FirstOrDefaultAsync(token);
+			=> _Roles.Find(r => r.Id == roleId)
+				.FirstOrDefaultAsync(token);
 
-		public virtual Task<TRole> FindByNameAsync(string roleName, CancellationToken token)
-			=> _Roles.Find(r => r.NormalizedName == roleName).FirstOrDefaultAsync(token);
+		// todo testing normalized?
+		public virtual Task<TRole> FindByNameAsync(string normalizedName, CancellationToken token)
+			=> _Roles.Find(r => r.NormalizedName == normalizedName)
+				.FirstOrDefaultAsync(token);
 
 		public virtual IQueryable<TRole> Roles
 			=> _Roles.AsQueryable();

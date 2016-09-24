@@ -27,5 +27,7 @@
 			var unique = new CreateIndexOptions {Unique = true};
 			users.Indexes.CreateOneAsync(email, unique);
 		}
+
+		// todo indexes for normalized role name, user name and emails?
 	}
 }

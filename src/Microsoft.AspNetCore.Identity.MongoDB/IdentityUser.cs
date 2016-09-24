@@ -29,6 +29,10 @@
 		// todo migration
 		public virtual string NormalizedUserName { get; set; }
 
+		/// <summary>
+		/// A random value that must change whenever a users credentials change 
+		/// (password changed, login removed)
+		/// </summary>
 		public virtual string SecurityStamp { get; set; }
 
 		public virtual string Email { get; set; }
@@ -45,6 +49,7 @@
 		public virtual bool TwoFactorEnabled { get; set; }
 
 		// todo migration
+		// ef has LockoutEnd ... what was this before?
 		public virtual DateTimeOffset? LockoutEndDateUtc { get; set; }
 
 		public virtual bool LockoutEnabled { get; set; }
@@ -78,6 +83,7 @@
 			Logins.Add(login);
 		}
 
+		// todo testing?
 		public virtual void RemoveLogin(string loginProvider, string providerKey)
 		{
 			Logins.RemoveAll(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey);
@@ -101,6 +107,7 @@
 			Claims.RemoveAll(c => c.Type == claim.Type && c.Value == claim.Value);
 		}
 
+		// todo testing?
 		public virtual void ReplaceClaim(Claim claim, Claim newClaim)
 		{
 			var current = Claims
@@ -114,9 +121,11 @@
 			AddClaim(newClaim);
 		}
 
+		// todo testing?
 		[BsonIgnoreIfNull]
 		public virtual List<IdentityUserToken> Tokens { get; set; }
 
+		// todo testing?
 		private IdentityUserToken GetToken(string loginProider, string name)
 			=> Tokens.FirstOrDefault(t => t.LoginProvider == loginProider && t.Name == name);
 
@@ -138,11 +147,13 @@
 			});
 		}
 
+		// todo testing?
 		public virtual string GetTokenValue(string loginProider, string name)
 		{
 			return GetToken(loginProider, name)?.Value;
 		}
 
+		// todo testing?
 		public virtual void RemoveToken(string loginProvider, string name)
 		{
 			Tokens.RemoveAll(t => t.LoginProvider == loginProvider && t.Name == name);

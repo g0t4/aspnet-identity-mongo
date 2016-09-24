@@ -90,5 +90,31 @@
 
 			user.ExpectOnlyHasThisClaim(newClaim);
 		}
+
+		[Test]
+		public async Task GetUsersForClaim()
+		{
+			var userWithClaim = new IdentityUser
+			{
+				UserName = "with"
+			};
+			var userWithout = new IdentityUser();
+			var manager = GetUserManager();
+			await manager.CreateAsync(userWithClaim);
+			await manager.CreateAsync(userWithout);
+			var claim = new Claim("sameType", "sameValue");
+			await manager.AddClaimAsync(userWithClaim, claim);
+
+			var matchedUsers = await manager.GetUsersForClaimAsync(claim);
+
+			Expect(matchedUsers.Count, Is.EqualTo(1));
+			Expect(matchedUsers.Single().UserName, Is.EqualTo("with"));
+
+			var matchesForWrongType = await manager.GetUsersForClaimAsync(new Claim("wrongType", "sameValue"));
+			Expect(matchesForWrongType, Is.Empty, "Users with claim with wrongType should not be returned but were.");
+
+			var matchesForWrongValue = await manager.GetUsersForClaimAsync(new Claim("sameType", "wrongValue"));
+			Expect(matchesForWrongValue, Is.Empty, "Users with claim with wrongValue should not be returned but were.");
+		}
 	}
 }

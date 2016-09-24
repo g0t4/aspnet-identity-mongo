@@ -220,11 +220,9 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 			return Task.FromResult(user.TwoFactorEnabled);
 		}
 
-		// todo testing
 		public virtual async Task<IList<TUser>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return await _Users
-				// todo integration test
 				.Find(u => u.Claims.Any(c => c.Type == claim.Type && c.Value == claim.Value))
 				.ToListAsync(cancellationToken);
 		}

@@ -6,6 +6,7 @@
 	using MongoDB.Bson;
 	using NUnit.Framework;
 
+	// todo low - validate all tests work
 	[TestFixture]
 	public class UserStoreTests : UserIntegrationTestsBase
 	{

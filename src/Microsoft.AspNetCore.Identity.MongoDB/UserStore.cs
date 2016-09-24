@@ -167,7 +167,6 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 		public virtual async Task<IList<Claim>> GetClaimsAsync(TUser user, CancellationToken token)
 			=> user.Claims.Select(c => c.ToSecurityClaim()).ToList();
 
-		// todo testing ok?
 		public virtual Task AddClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken token)
 		{
 			foreach (var claim in claims)
@@ -177,7 +176,6 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 			return Task.FromResult(0);
 		}
 
-		// todo testing ok?
 		public virtual Task RemoveClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken token)
 		{
 			foreach (var claim in claims)

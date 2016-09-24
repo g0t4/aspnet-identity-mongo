@@ -50,5 +50,24 @@
 			Expect(savedUser.Roles, Is.Empty);
 			Expect(await manager.IsInRoleAsync(user, "role"), Is.False);
 		}
+
+		[Test]
+		public async Task GetUsersInRole_FiltersOnRole()
+		{
+			var roleA = "roleA";
+			var roleB = "roleB";
+			var userInA = new IdentityUser {UserName = "nameA"};
+			var userInB = new IdentityUser {UserName = "nameB"};
+			var manager = GetUserManager();
+			await manager.CreateAsync(userInA);
+			await manager.CreateAsync(userInB);
+			await manager.AddToRoleAsync(userInA, roleA);
+			await manager.AddToRoleAsync(userInB, roleB);
+
+			var matchedUsers = await manager.GetUsersInRoleAsync("roleA");
+
+			Expect(matchedUsers.Count, Is.EqualTo(1));
+			Expect(matchedUsers.First().UserName, Is.EqualTo("nameA"));
+		}
 	}
 }

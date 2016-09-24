@@ -111,7 +111,6 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 		public virtual async Task<bool> IsInRoleAsync(TUser user, string normalizedRoleName, CancellationToken token)
 			=> user.Roles.Contains(normalizedRoleName);
 
-		// todo testing
 		public virtual async Task<IList<TUser>> GetUsersInRoleAsync(string normalizedRoleName, CancellationToken token)
 			=> await _Users.Find(u => u.Roles.Contains(normalizedRoleName))
 				.ToListAsync(token);

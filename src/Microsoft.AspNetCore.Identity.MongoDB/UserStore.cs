@@ -63,33 +63,27 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 			return IdentityResult.Success;
 		}
 
-		// todo testing
 		public virtual async Task<string> GetUserIdAsync(TUser user, CancellationToken cancellationToken)
 			=> user.Id;
 
-		// todo testing
 		public virtual async Task<string> GetUserNameAsync(TUser user, CancellationToken cancellationToken)
 			=> user.UserName;
 
-		// todo testing
 		public virtual async Task SetUserNameAsync(TUser user, string userName, CancellationToken cancellationToken)
 			=> user.UserName = userName;
 
-		// todo testing
+		// note: again this isn't used by Identity framework so no way to integration test it
 		public virtual async Task<string> GetNormalizedUserNameAsync(TUser user, CancellationToken cancellationToken)
 			=> user.NormalizedUserName;
 
-		// todo testing
 		public virtual async Task SetNormalizedUserNameAsync(TUser user, string normalizedUserName, CancellationToken cancellationToken)
 			=> user.NormalizedUserName = normalizedUserName;
 
-		// todo testing
 		public virtual Task<TUser> FindByIdAsync(string userId, CancellationToken token)
 			=> _Users.Find(u => u.Id == userId).FirstOrDefaultAsync(token);
 
 		public virtual Task<TUser> FindByNameAsync(string normalizedUserName, CancellationToken token)
-			// todo test fails with normalized?
-			// todo exception on duplicates? or better to enforce unique index to ensure this
+			// todo low priority exception on duplicates? or better to enforce unique index to ensure this
 			=> _Users.Find(u => u.NormalizedUserName == normalizedUserName).FirstOrDefaultAsync(token);
 
 		public virtual async Task SetPasswordHashAsync(TUser user, string passwordHash, CancellationToken token)

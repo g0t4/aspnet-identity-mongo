@@ -99,5 +99,22 @@
 			Expect(changedUser, Is.Not.Null);
 			Expect(changedUser.UserName, Is.EqualTo("newname"));
 		}
+
+		[Test]
+		public async Task SimpleAccessorsAndGetters()
+		{
+			var user = new IdentityUser
+			{
+				UserName = "username"
+			};
+			var manager = GetUserManager();
+			await manager.CreateAsync(user);
+
+			Expect(await manager.GetUserIdAsync(user), Is.EqualTo(user.Id));
+			Expect(await manager.GetUserNameAsync(user), Is.EqualTo("username"));
+
+			await manager.SetUserNameAsync(user, "newUserName");
+			Expect(await manager.GetUserNameAsync(user), Is.EqualTo("newUserName"));
+		}
 	}
 }

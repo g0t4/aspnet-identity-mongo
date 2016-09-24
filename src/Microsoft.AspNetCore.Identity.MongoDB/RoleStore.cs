@@ -61,11 +61,10 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 		public virtual async Task SetRoleNameAsync(TRole role, string roleName, CancellationToken cancellationToken)
 			=> role.Name = roleName;
 
-		// todo testing?
+		// note: can't test as of yet through integration testing because the Identity framework doesn't use this method internally anywhere
 		public virtual async Task<string> GetNormalizedRoleNameAsync(TRole role, CancellationToken cancellationToken)
 			=> role.NormalizedName;
 
-		// todo testing?
 		public virtual async Task SetNormalizedRoleNameAsync(TRole role, string normalizedName, CancellationToken cancellationToken)
 			=> role.NormalizedName = normalizedName;
 
@@ -73,7 +72,6 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 			=> _Roles.Find(r => r.Id == roleId)
 				.FirstOrDefaultAsync(token);
 
-		// todo testing normalized?
 		public virtual Task<TRole> FindByNameAsync(string normalizedName, CancellationToken token)
 			=> _Roles.Find(r => r.NormalizedName == normalizedName)
 				.FirstOrDefaultAsync(token);

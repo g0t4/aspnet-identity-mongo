@@ -20,8 +20,6 @@
 
 		public string Name { get; set; }
 
-		// todo migration from legacy AspNet.Identity.MongoDB type? At least in docs
-		// lookup how normalization is provided OOB and use that for default case
 		public string NormalizedName { get; set; }
 	}
 }

@@ -3,7 +3,8 @@
 - roles names need to be normalized (user.roles)
 	- Default uppercase - tell people if they customize this they have to deal with custom migration
 
-- add IdentityRole.NormalizedName
-- add IdentityUser.NormalizedUserName, IdentityUser.NormalizedEmail
+- normalization by uppercase:
+	- add IdentityRole.NormalizedName
+	- add IdentityUser.NormalizedUserName, IdentityUser.NormalizedEmail
 - LockoutEndDateUtc - type changed in code, but I think it is still the same in db
 - 

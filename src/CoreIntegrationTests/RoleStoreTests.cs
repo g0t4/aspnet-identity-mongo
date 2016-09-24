@@ -20,6 +20,7 @@
 
 			var savedRole = Roles.FindAll().Single();
 			Expect(savedRole.Name, Is.EqualTo(roleName));
+			Expect(savedRole.NormalizedName, Is.EqualTo("ADMIN"));
 		}
 
 		[Test]
@@ -30,6 +31,7 @@
 			var manager = GetRoleManager();
 			await manager.CreateAsync(role);
 
+			// note: also tests normalization as FindByName now uses normalization
 			var foundRole = await manager.FindByNameAsync(roleName);
 
 			Expect(foundRole, Is.Not.Null);

@@ -68,7 +68,7 @@
 			await manager.CreateAsync(user);
 			await manager.AddLoginAsync(user, login);
 
-			var findUser = manager.FindByLoginAsync(login.LoginProvider, login.ProviderKey);
+			var findUser = await manager.FindByLoginAsync(login.LoginProvider, login.ProviderKey);
 
 			Expect(findUser, Is.Not.Null);
 		}

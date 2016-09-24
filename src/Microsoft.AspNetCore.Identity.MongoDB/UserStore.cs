@@ -124,7 +124,6 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 		public virtual async Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user, CancellationToken token)
 			=> user.Logins;
 
-		// todo testing?
 		public virtual Task<TUser> FindByLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken = default(CancellationToken))
 			=> _Users
 				.Find(u => u.Logins.Any(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey))

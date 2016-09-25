@@ -227,14 +227,12 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 				.ToListAsync(cancellationToken);
 		}
 
-		// todo testing?
 		public virtual Task<DateTimeOffset?> GetLockoutEndDateAsync(TUser user, CancellationToken token)
 		{
 			// todo migration?
 			return Task.FromResult(user.LockoutEndDateUtc);
 		}
 
-		// todo testing?
 		public virtual Task SetLockoutEndDateAsync(TUser user, DateTimeOffset? lockoutEnd, CancellationToken token)
 		{
 			user.LockoutEndDateUtc = lockoutEnd;
@@ -256,11 +254,9 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 		public virtual async Task<int> GetAccessFailedCountAsync(TUser user, CancellationToken token)
 			=> user.AccessFailedCount;
 
-		// todo testing?
 		public virtual async Task<bool> GetLockoutEnabledAsync(TUser user, CancellationToken token)
 			=> user.LockoutEnabled;
 
-		// todo testing?
 		public virtual async Task SetLockoutEnabledAsync(TUser user, bool enabled, CancellationToken token)
 			=> user.LockoutEnabled = enabled;
 

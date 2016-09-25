@@ -15,7 +15,6 @@
 			Roles = new List<string>();
 			Logins = new List<UserLoginInfo>();
 			Claims = new List<IdentityUserClaim>();
-			// todo testing token init
 			Tokens = new List<IdentityUserToken>();
 		}
 
@@ -82,7 +81,6 @@
 			Logins.Add(login);
 		}
 
-		// todo testing?
 		public virtual void RemoveLogin(string loginProvider, string providerKey)
 		{
 			Logins.RemoveAll(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey);
@@ -123,11 +121,10 @@
 		[BsonIgnoreIfNull]
 		public virtual List<IdentityUserToken> Tokens { get; set; }
 
-		// todo testing?
 		private IdentityUserToken GetToken(string loginProider, string name)
-			=> Tokens.FirstOrDefault(t => t.LoginProvider == loginProider && t.Name == name);
+			=> Tokens
+				.FirstOrDefault(t => t.LoginProvider == loginProider && t.Name == name);
 
-		// todo testing of tokens, what are these for?
 		public virtual void SetToken(string loginProider, string name, string value)
 		{
 			var existingToken = GetToken(loginProider, name);
@@ -145,13 +142,11 @@
 			});
 		}
 
-		// todo testing?
 		public virtual string GetTokenValue(string loginProider, string name)
 		{
 			return GetToken(loginProider, name)?.Value;
 		}
 
-		// todo testing?
 		public virtual void RemoveToken(string loginProvider, string name)
 		{
 			Tokens.RemoveAll(t => t.LoginProvider == loginProvider && t.Name == name);

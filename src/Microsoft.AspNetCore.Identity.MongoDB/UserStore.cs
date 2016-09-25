@@ -262,15 +262,12 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 
 		public virtual IQueryable<TUser> Users => _Users.AsQueryable();
 
-		// todo testing
 		public virtual async Task SetTokenAsync(TUser user, string loginProvider, string name, string value, CancellationToken cancellationToken)
 			=> user.SetToken(loginProvider, name, value);
 
-		// todo testing
 		public virtual async Task RemoveTokenAsync(TUser user, string loginProvider, string name, CancellationToken cancellationToken)
 			=> user.RemoveToken(loginProvider, name);
 
-		// todo testing
 		public virtual async Task<string> GetTokenAsync(TUser user, string loginProvider, string name, CancellationToken cancellationToken)
 			=> user.GetTokenValue(loginProvider, name);
 	}

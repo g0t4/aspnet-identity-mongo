@@ -41,65 +41,34 @@
 		}
 
 		[Test]
-		public void Create_NewIdentityUser_RolesNotNull()
-		{
-			var user = new IdentityUser();
-
-			Expect(user.Roles, Is.Not.Null);
-		}
-
-		[Test]
-		public void Create_NullRoles_DoesNotSerializeRoles()
+		public void Create_NullLists_DoesNotSerializeNullLists()
 		{
 			// serialized nulls can cause havoc in deserialization, overwriting the constructor's initial empty list 
 			var user = new IdentityUser();
 			user.Roles = null;
+			user.Tokens = null;
+			user.Logins = null;
+			user.Claims = null;
 
 			var document = user.ToBsonDocument();
 
 			Expect(document.Contains("Roles"), Is.False);
+			Expect(document.Contains("Tokens"), Is.False);
+			Expect(document.Contains("Logins"), Is.False);
+			Expect(document.Contains("Claims"), Is.False);
 		}
 
 		// todo consider if we want to not serialize the empty Roles array, also empty Logins array
 
 		[Test]
-		public void Create_NewIdentityUser_LoginsNotNull()
+		public void Create_NewIdentityUser_ListsNotNull()
 		{
 			var user = new IdentityUser();
 
-			Expect(user.Logins, Is.Not.Null);
-		}
-
-		[Test]
-		public void Create_NullLogins_DoesNotSerializeLogins()
-		{
-			// serialized nulls can cause havoc in deserialization, overwriting the constructor's initial empty list 
-			var user = new IdentityUser();
-			user.Logins = null;
-
-			var document = user.ToBsonDocument();
-
-			Expect(document.Contains("Logins"), Is.False);
-		}
-
-		[Test]
-		public void Create_NewIdentityUser_ClaimsNotNull()
-		{
-			var user = new IdentityUser();
-
-			Expect(user.Claims, Is.Not.Null);
-		}
-
-		[Test]
-		public void Create_NullClaims_DoesNotSerializeClaims()
-		{
-			// serialized nulls can cause havoc in deserialization, overwriting the constructor's initial empty list 
-			var user = new IdentityUser();
-			user.Claims = null;
-
-			var document = user.ToBsonDocument();
-
-			Expect(document.Contains("Claims"), Is.False);
+			Expect(user.Logins, Is.Empty);
+			Expect(user.Tokens, Is.Empty);
+			Expect(user.Roles, Is.Empty);
+			Expect(user.Claims, Is.Empty);
 		}
 	}
 }

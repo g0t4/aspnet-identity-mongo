@@ -23,9 +23,6 @@
 
 		public virtual string UserName { get; set; }
 
-		// todo what should we do with this in Mongo land
-		// https://github.com/aspnet/Identity/issues/351
-		// todo migration
 		public virtual string NormalizedUserName { get; set; }
 
 		/// <summary>
@@ -36,7 +33,6 @@
 
 		public virtual string Email { get; set; }
 
-		// todo migration
 		public virtual string NormalizedEmail { get; set; }
 
 		public virtual bool EmailConfirmed { get; set; }
@@ -47,8 +43,6 @@
 
 		public virtual bool TwoFactorEnabled { get; set; }
 
-		// todo migration
-		// ef has LockoutEnd ... what was this before?
 		public virtual DateTimeOffset? LockoutEndDateUtc { get; set; }
 
 		public virtual bool LockoutEnabled { get; set; }
@@ -72,7 +66,6 @@
 		public virtual string PasswordHash { get; set; }
 
 		// todo move to a type I manage - and check for changes to UserLoginInfo for migration purposes
-		// todo I know that displayName was added
 		[BsonIgnoreIfNull]
 		public virtual List<UserLoginInfo> Logins { get; set; }
 
@@ -117,7 +110,6 @@
 			AddClaim(newClaim);
 		}
 
-		// todo testing?
 		[BsonIgnoreIfNull]
 		public virtual List<IdentityUserToken> Tokens { get; set; }
 

@@ -58,8 +58,6 @@
 			Expect(document.Contains("Claims"), Is.False);
 		}
 
-		// todo consider if we want to not serialize the empty Roles array, also empty Logins array
-
 		[Test]
 		public void Create_NewIdentityUser_ListsNotNull()
 		{

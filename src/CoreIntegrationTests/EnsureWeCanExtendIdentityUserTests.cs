@@ -34,7 +34,6 @@
 		{
 			_User.ExtendedField = "extendedField";
 
-			// todo note: async methods dropped in Identity 3
 			await _Manager.CreateAsync(_User);
 
 			var savedUser = Users.FindAllAs<ExtendedIdentityUser>().Single();

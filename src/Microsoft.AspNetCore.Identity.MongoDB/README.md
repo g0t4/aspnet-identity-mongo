@@ -7,4 +7,5 @@
 	- add IdentityRole.NormalizedName
 	- add IdentityUser.NormalizedUserName, IdentityUser.NormalizedEmail
 - LockoutEndDateUtc - type changed in code, but I think it is still the same in db
-- 
+
+- Should't cause a problem, but FYI, UserLoginInfo.ProviderDisplayName was added

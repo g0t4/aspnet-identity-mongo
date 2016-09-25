@@ -28,7 +28,6 @@
 			var user = new IdentityUser {UserName = "bob"};
 			await manager.CreateAsync(user);
 
-			// todo it would be nice if the API for UserManager asked for a normalized name and not just a name
 			await manager.AddToRoleAsync(user, "role");
 
 			var savedUser = Users.FindAll().Single();

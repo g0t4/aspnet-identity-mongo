@@ -229,7 +229,6 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 
 		public virtual Task<DateTimeOffset?> GetLockoutEndDateAsync(TUser user, CancellationToken token)
 		{
-			// todo migration?
 			return Task.FromResult(user.LockoutEndDateUtc);
 		}
 

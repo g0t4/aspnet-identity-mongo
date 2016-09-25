@@ -26,7 +26,6 @@
 
 		private UserManager<IdentityUser> GetUserManagerWithThreeMaxAccessAttempts()
 		{
-			// todo is this really needed to set Max Failed Attempts?
 			return CreateServiceProvider<IdentityUser, IdentityRole>(options => options.Lockout.MaxFailedAccessAttempts = 3)
 				.GetService<UserManager<IdentityUser>>();
 		}

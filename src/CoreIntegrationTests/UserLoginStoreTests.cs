@@ -14,7 +14,6 @@
 		public async Task AddLogin_NewLogin_Adds()
 		{
 			var manager = GetUserManager();
-			// todo what's this new displayName for userLoginInfo
 			var login = new UserLoginInfo("provider", "key", "name");
 			var user = new IdentityUser {UserName = "bob"};
 			await manager.CreateAsync(user);
@@ -24,7 +23,6 @@
 			var savedLogin = Users.FindAll().Single().Logins.Single();
 			Expect(savedLogin.LoginProvider, Is.EqualTo("provider"));
 			Expect(savedLogin.ProviderKey, Is.EqualTo("key"));
-			// todo test displayname, what about migrating this?
 			Expect(savedLogin.ProviderDisplayName, Is.EqualTo("name"));
 		}
 
@@ -57,7 +55,7 @@
 			var savedLogin = logins.Single();
 			Expect(savedLogin.LoginProvider, Is.EqualTo("provider"));
 			Expect(savedLogin.ProviderKey, Is.EqualTo("key"));
-			// todo name
+			Expect(savedLogin.ProviderDisplayName, Is.EqualTo("name"));
 		}
 
 		[Test]

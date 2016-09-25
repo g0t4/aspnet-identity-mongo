@@ -27,6 +27,7 @@
 			var client = new MongoClient("mongodb://localhost:27017");
 			var identityTesting = "identity-testing";
 
+			// todo move away from GetServer which could be deprecated at some point
 			Database = client.GetServer().GetDatabase(identityTesting);
 			Users = Database.GetCollection<IdentityUser>("users");
 			Roles = Database.GetCollection<IdentityRole>("roles");

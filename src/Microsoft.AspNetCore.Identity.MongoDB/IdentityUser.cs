@@ -13,7 +13,7 @@
 		{
 			Id = ObjectId.GenerateNewId().ToString();
 			Roles = new List<string>();
-			Logins = new List<UserLoginInfo>();
+			Logins = new List<IdentityUserLogin>();
 			Claims = new List<IdentityUserClaim>();
 			Tokens = new List<IdentityUserToken>();
 		}
@@ -65,13 +65,12 @@
 		[BsonIgnoreIfNull]
 		public virtual string PasswordHash { get; set; }
 
-		// todo move to a type I manage - and check for changes to UserLoginInfo for migration purposes
 		[BsonIgnoreIfNull]
-		public virtual List<UserLoginInfo> Logins { get; set; }
+		public virtual List<IdentityUserLogin> Logins { get; set; }
 
 		public virtual void AddLogin(UserLoginInfo login)
 		{
-			Logins.Add(login);
+			Logins.Add(new IdentityUserLogin(login));
 		}
 
 		public virtual void RemoveLogin(string loginProvider, string providerKey)

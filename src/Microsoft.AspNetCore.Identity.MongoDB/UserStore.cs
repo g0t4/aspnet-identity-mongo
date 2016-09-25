@@ -122,7 +122,9 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 			=> user.RemoveLogin(loginProvider, providerKey);
 
 		public virtual async Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user, CancellationToken token)
-			=> user.Logins;
+			=> user.Logins
+				.Select(l => l.ToUserLoginInfo())
+				.ToList();
 
 		public virtual Task<TUser> FindByLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken = default(CancellationToken))
 			=> _Users

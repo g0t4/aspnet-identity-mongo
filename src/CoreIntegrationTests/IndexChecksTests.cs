@@ -1,61 +1,42 @@
 ﻿namespace IntegrationTests
 {
+	using System;
 	using System.Linq;
 	using Microsoft.AspNetCore.Identity.MongoDB;
+	using MongoDB.Driver;
 	using NUnit.Framework;
 
 	[TestFixture]
 	public class IndexChecksTests : UserIntegrationTestsBase
 	{
 		[Test]
-		public void EnsureUniqueIndexOnUserName_NoIndexOnUserName_AddsUniqueIndexOnUserName()
+		public void EnsureUniqueIndexes()
 		{
-			var userCollectionName = "userindextest";
-			Database.DropCollection(userCollectionName);
-			var usersNewApi = DatabaseNewApi.GetCollection<IdentityUser>(userCollectionName);
+			EnsureUniqueIndex<IdentityUser>(IndexChecks.OptionalIndexChecks.EnsureUniqueIndexOnUserName, "UserName");
+			EnsureUniqueIndex<IdentityUser>(IndexChecks.OptionalIndexChecks.EnsureUniqueIndexOnEmail, "Email");
+			EnsureUniqueIndex<IdentityRole>(IndexChecks.OptionalIndexChecks.EnsureUniqueIndexOnRoleName, "Name");
 
-			IndexChecks.EnsureUniqueIndexOnUserName(usersNewApi);
-
-			var users = Database.GetCollection(userCollectionName);
-			var index = users.GetIndexes()
-				.Where(i => i.IsUnique)
-				.Where(i => i.Key.Count() == 1)
-				.First(i => i.Key.Contains("UserName"));
-			Expect(index.Key.Count(), Is.EqualTo(1));
+			EnsureUniqueIndex<IdentityUser>(IndexChecks.EnsureUniqueIndexOnNormalizedUserName, "NormalizedUserName");
+			EnsureUniqueIndex<IdentityUser>(IndexChecks.EnsureUniqueIndexOnNormalizedEmail, "NormalizedEmail");
+			EnsureUniqueIndex<IdentityRole>(IndexChecks.EnsureUniqueIndexOnNormalizedRoleName, "NormalizedName");
 		}
 
-		[Test]
-		public void EnsureEmailUniqueIndex_NoIndexOnEmail_AddsUniqueIndexOnEmail()
+		private void EnsureUniqueIndex<TCollection>(Action<IMongoCollection<TCollection>> addIndex, string indexedField)
 		{
-			var userCollectionName = "userindextest";
-			Database.DropCollection(userCollectionName);
-			var usersNewApi = DatabaseNewApi.GetCollection<IdentityUser>(userCollectionName);
+			var testCollectionName = "indextest";
+			Database.DropCollection(testCollectionName);
+			var testCollection = DatabaseNewApi.GetCollection<TCollection>(testCollectionName);
 
-			IndexChecks.EnsureUniqueIndexOnEmail(usersNewApi);
+			addIndex(testCollection);
 
-			var users = Database.GetCollection(userCollectionName);
-			var index = users.GetIndexes()
+			var legacyCollectionInterface = Database.GetCollection(testCollectionName);
+			var index = legacyCollectionInterface.GetIndexes()
 				.Where(i => i.IsUnique)
 				.Where(i => i.Key.Count() == 1)
-				.First(i => i.Key.Contains("Email"));
-			Expect(index.Key.Count(), Is.EqualTo(1));
-		}
-
-		[Test]
-		public void EnsureUniqueIndexOnRoleName_NoIndexOnRoleName_AddsUniqueIndexOnRoleName()
-		{
-			var roleCollectionName = "roleindextest";
-			Database.DropCollection(roleCollectionName);
-			var rolesNewApi = DatabaseNewApi.GetCollection<IdentityRole>(roleCollectionName);
-
-			IndexChecks.EnsureUniqueIndexOnRoleName(rolesNewApi);
-
-			var roles = Database.GetCollection(roleCollectionName);
-			var index = roles.GetIndexes()
-				.Where(i => i.IsUnique)
-				.Where(i => i.Key.Count() == 1)
-				.First(i => i.Key.Contains("Name"));
-			Expect(index.Key.Count(), Is.EqualTo(1));
+				.FirstOrDefault(i => i.Key.Contains(indexedField));
+			var failureMessage = $"No unique index found on {indexedField}";
+			Expect(index, Is.Not.Null, failureMessage);
+			Expect(index.Key.Count(), Is.EqualTo(1), failureMessage);
 		}
 	}
 }

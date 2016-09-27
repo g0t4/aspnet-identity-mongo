@@ -70,7 +70,7 @@
 
 			TestDelegate addMongoStores = () => new ServiceCollection()
 				.AddIdentity<IdentityUser, IdentityRole>()
-				.AddMongoStores<IdentityUser, IdentityRole>(connectionStringWithoutDatabase);
+				.RegisterMongoStores<IdentityUser, IdentityRole>(connectionStringWithoutDatabase);
 
 			Expect(addMongoStores, Throws.Exception
 				.With.Message.Contains("Your connection string must contain a database name"));
@@ -89,16 +89,16 @@
 		{
 			Expect(() => new ServiceCollection()
 					.AddIdentity<IdentityUser, IdentityRole>()
-					.AddMongoStores<WrongUser, IdentityRole>(FakeConnectionStringWithDatabase),
+					.RegisterMongoStores<WrongUser, IdentityRole>(FakeConnectionStringWithDatabase),
 				Throws.Exception.With.Message
-					.EqualTo("User type passed to AddMongoStores must match user type passed to AddIdentity. You passed Microsoft.AspNetCore.Identity.MongoDB.IdentityUser to AddIdentity and CoreTests.MongoIdentityBuilderExtensionsTests+WrongUser to AddMongoStores, these do not match.")
+					.EqualTo("User type passed to RegisterMongoStores must match user type passed to AddIdentity. You passed Microsoft.AspNetCore.Identity.MongoDB.IdentityUser to AddIdentity and CoreTests.MongoIdentityBuilderExtensionsTests+WrongUser to RegisterMongoStores, these do not match.")
 			);
 
 			Expect(() => new ServiceCollection()
 					.AddIdentity<IdentityUser, IdentityRole>()
-					.AddMongoStores<IdentityUser, WrongRole>(FakeConnectionStringWithDatabase),
+					.RegisterMongoStores<IdentityUser, WrongRole>(FakeConnectionStringWithDatabase),
 				Throws.Exception.With.Message
-					.EqualTo("Role type passed to AddMongoStores must match role type passed to AddIdentity. You passed Microsoft.AspNetCore.Identity.MongoDB.IdentityRole to AddIdentity and CoreTests.MongoIdentityBuilderExtensionsTests+WrongRole to AddMongoStores, these do not match.")
+					.EqualTo("Role type passed to RegisterMongoStores must match role type passed to AddIdentity. You passed Microsoft.AspNetCore.Identity.MongoDB.IdentityRole to AddIdentity and CoreTests.MongoIdentityBuilderExtensionsTests+WrongRole to RegisterMongoStores, these do not match.")
 			);
 		}
 	}

@@ -52,7 +52,7 @@
 			optionsProvider = optionsProvider ?? (options => { });
 			services.AddIdentity<TUser, TRole>(optionsProvider)
 				.AddDefaultTokenProviders()
-				.AddMongoStores<TUser, TRole>(_TestingConnectionString);
+				.RegisterMongoStores<TUser, TRole>(_TestingConnectionString);
 
 			services.AddLogging();
 

@@ -15,7 +15,7 @@ namespace Microsoft.Extensions.DependencyInjection
 		/// </summary>
 		/// <param name="builder"></param>
 		/// <param name="connectionString">Must contain the database name</param>
-		public static IdentityBuilder AddMongoStores<TUser, TRole>(this IdentityBuilder builder, string connectionString)
+		public static IdentityBuilder RegisterMongoStores<TUser, TRole>(this IdentityBuilder builder, string connectionString)
 			where TRole : IdentityRole
 			where TUser : IdentityUser
 		{
@@ -26,7 +26,7 @@ namespace Microsoft.Extensions.DependencyInjection
 				throw new ArgumentException("Your connection string must contain a database name", connectionString);
 			}
 			var database = client.GetDatabase(url.DatabaseName);
-			return builder.AddMongoStores(
+			return builder.RegisterMongoStores(
 				p => database.GetCollection<TUser>("users"),
 				p => database.GetCollection<TRole>("roles"));
 		}
@@ -40,7 +40,7 @@ namespace Microsoft.Extensions.DependencyInjection
 		/// <param name="builder"></param>
 		/// <param name="usersCollectionFactory"></param>
 		/// <param name="rolesCollectionFactory"></param>
-		public static IdentityBuilder AddMongoStores<TUser, TRole>(this IdentityBuilder builder,
+		public static IdentityBuilder RegisterMongoStores<TUser, TRole>(this IdentityBuilder builder,
 			Func<IServiceProvider, IMongoCollection<TUser>> usersCollectionFactory,
 			Func<IServiceProvider, IMongoCollection<TRole>> rolesCollectionFactory)
 			where TRole : IdentityRole
@@ -48,15 +48,15 @@ namespace Microsoft.Extensions.DependencyInjection
 		{
 			if (typeof(TUser) != builder.UserType)
 			{
-				var message = "User type passed to AddMongoStores must match user type passed to AddIdentity. "
-				              + $"You passed {builder.UserType} to AddIdentity and {typeof(TUser)} to AddMongoStores, "
+				var message = "User type passed to RegisterMongoStores must match user type passed to AddIdentity. "
+				              + $"You passed {builder.UserType} to AddIdentity and {typeof(TUser)} to RegisterMongoStores, "
 				              + "these do not match.";
 				throw new ArgumentException(message);
 			}
 			if (typeof(TRole) != builder.RoleType)
 			{
-				var message = "Role type passed to AddMongoStores must match role type passed to AddIdentity. "
-				              + $"You passed {builder.RoleType} to AddIdentity and {typeof(TRole)} to AddMongoStores, "
+				var message = "Role type passed to RegisterMongoStores must match role type passed to AddIdentity. "
+				              + $"You passed {builder.RoleType} to AddIdentity and {typeof(TRole)} to RegisterMongoStores, "
 				              + "these do not match.";
 				throw new ArgumentException(message);
 			}
@@ -88,7 +88,7 @@ namespace Microsoft.Extensions.DependencyInjection
 			where TRole : IdentityRole
 		{
 			services.AddIdentity<TUser, TRole>()
-				.AddMongoStores<TUser, TRole>(connectionString);
+				.RegisterMongoStores<TUser, TRole>(connectionString);
 		}
 	}
 }

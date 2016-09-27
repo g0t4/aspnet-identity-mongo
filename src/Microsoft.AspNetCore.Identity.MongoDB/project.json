@@ -33,13 +33,15 @@
 
   "dependencies": {
     "Microsoft.AspNetCore.Identity": "1.0.0",
-    "MongoDB.Driver": "2.3.0-rc1",
-    "NETStandard.Library": "1.6.0"
+    "MongoDB.Driver": "2.3.0"
   },
 
   "frameworks": {
+    "net451": {},
     "netstandard1.5": {
-    
+      "dependencies": {
+        "NETStandard.Library": "1.6.0"
+      }
     }
   }
 }

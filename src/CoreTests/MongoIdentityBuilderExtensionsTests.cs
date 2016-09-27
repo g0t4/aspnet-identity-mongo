@@ -14,10 +14,7 @@
 		public void AddMongoStores_WithDefaultTypes_ResolvesStoresAndManagers()
 		{
 			var services = new ServiceCollection();
-			services
-				.AddIdentity<IdentityUser, IdentityRole>()
-				.AddMongoStores<IdentityUser, IdentityRole>(FakeConnectionStringWithDatabase);
-
+			services.AddIdentityWithMongoStores(FakeConnectionStringWithDatabase);
 			// note: UserManager and RoleManager use logging
 			services.AddLogging();
 
@@ -49,9 +46,7 @@
 			// this test is just to make sure I consider the interface for using custom types
 			// so that it's not a horrible experience even though it should be rarely used
 			var services = new ServiceCollection();
-			services
-				.AddIdentity<CustomUser, CustomRole>()
-				.AddMongoStores<CustomUser, CustomRole>(FakeConnectionStringWithDatabase);
+			services.AddIdentityWithMongoStoresUsingCustomTypes<CustomUser, CustomRole>(FakeConnectionStringWithDatabase);
 			services.AddLogging();
 
 			var provider = services.BuildServiceProvider();

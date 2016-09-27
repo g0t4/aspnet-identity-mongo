@@ -1,58 +1,59 @@
-AspNet.Identity.Mongo
-=====================
+﻿## Microsoft.AspNetCore.Identity.MongoDB
 
-A mongodb provider for the new ASP.NET Identity framework. My aim is to ensure this project is well tested and configurable.
+This is a MongoDB provider for the ASP.NET Core Identity framework. This was ported from the v2 Identity framework that was a part of ASP.NET (AspNet.Identity.Mongo NuGet package)
+
+I've released a new package for the ASP.NET Core Identity framework for the following reasons:
+- Discoverability - named AspNetCore
+- Continue to support the old package for ASP.NET (not Core)
+- ASP.NET Core is a rewrite of ASP.NET, this Core Identity framework won't run on traditional ASP.NET 
+
+This project has extensive test coverage. 
+
+This point of this adapter is to provide a simple wrapper to work with MongoDB. I do not intende to cover every possible desirable configuration, if you don't like my decisions, write your own adapter. These adapters are not complicated, but trying to make them configurable would become a complicated mess and would confuse the majority of people that want something simple to use, so I'm favoring simplicity over making every last person happy.
 
 ## Usage
 
-	var client = new MongoClient("mongodb://localhost:27017");
-	var database = client.GetDatabase("mydb");
-	var users = database.GetCollection<IdentityUser>("users");
+- `Install-Package Microsoft.AspNetCore.Identity.MongoDB`
+- Then, in ConfigureServices--or wherever you are registering services--include the following to register both the Identity services and MongoDB stores:
 
-	var store = new UserStore<IdentityUser>(users);
-	var manager = new UserManager<IdentityUser>(store);
+```csharp
+services.AddIdentityWithMongoStores("mongodb://localhost/myDB");
+```
 
-	// if you want roles too:
-	var roles = database.GetCollection<IdentityRole>("roles");
-	var roleStore = new RoleStore<IdentityRole>(roles);
+- If you want to customize what is registered, refer to the tests for further options (CoreTests/MongoIdentityBuilderExtensionsTests.cs)
+- Remember with the Identity framework, the whole point is that both a `UserManager` and `RoleManager` are provided for you to use, here's how you can resolve instances:
 
-	// at some point in application startup it would be good to ensure unique indexes on user and role names exist:
+```csharp
+var userManager = provider.GetService<UserManager<IdentityUser>>();
+var roleManager = provider.GetService<RoleManager<IdentityRole>>();
+```
 
-	IndexChecks.EnsureUniqueIndexOnUserName(users);
-	IndexChecks.EnsureUniqueIndexOnEmail(users);
+- The following methods help create indexes that will boost lookups by UserName, Email and role Name, by the way these have changed since Identity v2 to refer to Normalized fields. I dislike this aspect of Core Identity, but it is what it is. Basically these three fields are stored in uppercase format for case insensitive searches.
 
-	IndexChecks.EnsureUniqueIndexOnRoleName(roles);
+```csharp
+	IndexChecks.EnsureUniqueIndexOnNormalizedUserName(users);
+	IndexChecks.EnsureUniqueIndexOnNormalizedEmail(users);
+	IndexChecks.EnsureUniqueIndexOnNormalizedRoleName(roles);
+```
 
-OR
+- Here is a sample project, review the commit log for the steps taken to port the default template from EntityFramework MSSQL to MongoDB. [aspnet-identity-mongo-sample](https://github.com/g0t4/aspnet-identity-mongo-sample).
 
-a sample [aspnet-identity-mongo-sample](https://github.com/g0t4/aspnet-identity-mongo-sample) based on [Microsoft ASP.NET Identity Samples](http://www.nuget.org/packages/Microsoft.AspNet.Identity.Samples).
+What frameworks are targeted, with rationale:
 
-## Installation
+- Microsoft.AspNetCore.Identity - supports net451 and netstandard1.3
+- MongoDB.Driver v2.3 - supports net45 and netstandard1.5
+- Thus, the lowest common denominators are net451 (of net45 and net451) and netstandard1.5 (of netstandard1.3 and netstandard1.5) 
+- FYI net451 supports netstandard1.2, that's obviously too low for a single target
 
-via nuget:
+## Migrating from ASP.NET Identity 2.0
 
-	Install-Package AspNet.Identity.MongoDB
 
-## Building and Testing
+- roles names need to be normalized (user.roles)
+	- Default uppercase - tell people if they customize this they have to deal with custom migration
 
-I'm using the albacore project with rake.
+- normalization by uppercase:
+	- add IdentityRole.NormalizedName
+	- add IdentityUser.NormalizedUserName, IdentityUser.NormalizedEmail
+- LockoutEndDateUtc - type changed in code, but I think it is still the same in db
 
-To build:
-
-	rake msbuild
-	
-To test:
-
-	rake tests
-	rake integration_tests
-
-To package:
-	
-	rake package
-
-## Documentation
-
-I'm writing about my design decisions on my blog:
-
-- [Building a mongodb provider for the new ASP.NET Identity framework - Part 1](http://devblog.wesmcclure.com/posts/building-a-mongodb-provider-for-the-new-asp.net-identity-framework-part-1)
-- [Building a mongodb provider for the new ASP.NET Identity framework - Part 2 RoleStore And Sample](http://devblog.wesmcclure.com/posts/building-a-mongodb-provider-for-the-new-asp.net-identity-framework-part-2-rolestore-and-sample)
+- Should't cause a problem, but FYI, IdentityUserLogin.ProviderDisplayName, I believe this was a change to Identity v2

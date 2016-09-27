@@ -21,5 +21,7 @@
 		public string Name { get; set; }
 
 		public string NormalizedName { get; set; }
+
+		public override string ToString() => Name;
 	}
 }

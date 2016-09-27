@@ -142,5 +142,7 @@
 		{
 			Tokens.RemoveAll(t => t.LoginProvider == loginProvider && t.Name == name);
 		}
+
+		public override string ToString() => UserName;
 	}
 }

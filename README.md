@@ -45,6 +45,10 @@ What frameworks are targeted, with rationale:
 - Thus, the lowest common denominators are net451 (of net45 and net451) and netstandard1.5 (of netstandard1.3 and netstandard1.5) 
 - FYI net451 supports netstandard1.2, that's obviously too low for a single target
 
+## Building instructions
+
+run commands in [](build.sh)
+
 ## Migrating from ASP.NET Identity 2.0
 
 - Roles names need to be normalized as follows

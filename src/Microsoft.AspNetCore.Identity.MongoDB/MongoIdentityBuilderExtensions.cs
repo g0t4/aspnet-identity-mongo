@@ -10,6 +10,7 @@ namespace Microsoft.Extensions.DependencyInjection
 	public static class MongoIdentityBuilderExtensions
 	{
 		/// <summary>
+		///     If you want the default collections, use this method.
 		///     Uses "users" collection and "roles" collections.
 		/// </summary>
 		/// <param name="builder"></param>

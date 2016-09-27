@@ -1,4 +1,15 @@
-﻿## Microsoft.AspNetCore.Identity.MongoDB
+﻿## Instructions
+
+- `Install-Package Microsoft.AspNetCore.Identity.MongoDB`
+- Register identity services as follows. Make sure the types passed to AddIdentity and AddMongoStores match.
+```csharp
+services
+    .AddIdentity<IdentityUser, IdentityRole>()
+    .AddMongoStores<IdentityUser, IdentityRole>("mongodb://localhost/myDB");
+```
+
+
+## Microsoft.AspNetCore.Identity.MongoDB
 
 This is a MongoDB provider for the ASP.NET Core Identity framework.
 

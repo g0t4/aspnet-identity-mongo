@@ -3,7 +3,7 @@
   "version": "1.0.0-*",
 
   "description":
-    "A MongoDB provider for ASP.NET Core Identity. NET Core Identity fwk. My aim is to ensure this project is well tested and configurable.",
+    "A MongoDB provider for ASP.NET Core Identity framework.",
 
   "authors": ["Wes Higbee"],
 

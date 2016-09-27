@@ -154,7 +154,8 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
-/TestResult.xml
+
+TestResult.xml
 
 project.lock.json
 

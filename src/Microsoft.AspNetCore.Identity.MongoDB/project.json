@@ -1,6 +1,6 @@
 {
   "name": "Microsoft.AspNetCore.Identity.MongoDB",
-  "version": "1.0.0-*",
+  "version": "1.0.1",
 
   "description":
     "A MongoDB provider for ASP.NET Core Identity framework.",

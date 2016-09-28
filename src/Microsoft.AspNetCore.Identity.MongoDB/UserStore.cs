@@ -10,6 +10,7 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 	using System.Security.Claims;
 	using System.Threading;
 	using System.Threading.Tasks;
+	using global::MongoDB.Bson;
 	using global::MongoDB.Driver;
 
 	/// <summary>
@@ -80,7 +81,15 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 			=> user.NormalizedUserName = normalizedUserName;
 
 		public virtual Task<TUser> FindByIdAsync(string userId, CancellationToken token)
-			=> _Users.Find(u => u.Id == userId).FirstOrDefaultAsync(token);
+			=> IsObjectId(userId)
+				? _Users.Find(u => u.Id == userId).FirstOrDefaultAsync(token)
+				: Task.FromResult<TUser>(null);
+
+		private bool IsObjectId(string id)
+		{
+			ObjectId temp;
+			return ObjectId.TryParse(id, out temp);
+		}
 
 		public virtual Task<TUser> FindByNameAsync(string normalizedUserName, CancellationToken token)
 			// todo low priority exception on duplicates? or better to enforce unique index to ensure this

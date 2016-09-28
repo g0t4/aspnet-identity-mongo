@@ -73,6 +73,16 @@
 		}
 
 		[Test]
+		public async Task FindById_IdIsNotAnObjectId_ReturnsNull()
+		{
+			var manager = GetUserManager();
+
+			var foundUser = await manager.FindByIdAsync("notanobjectid");
+
+			Expect(foundUser, Is.Null);
+		}
+
+		[Test]
 		public async Task Delete_ExistingUser_Removes()
 		{
 			var user = new IdentityUser {UserName = "name"};

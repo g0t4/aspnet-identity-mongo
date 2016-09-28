@@ -13,7 +13,7 @@ If you want something easy to setup, this adapter is for you. I do not intend to
 
 ## Usage
 
-- `Install-Package Microsoft.AspNetCore.Identity.MongoDB`
+- Reference this package in project.json: Microsoft.AspNetCore.Identity.MongoDB
 - Then, in ConfigureServices--or wherever you are registering services--include the following to register both the Identity services and MongoDB stores:
 
 ```csharp

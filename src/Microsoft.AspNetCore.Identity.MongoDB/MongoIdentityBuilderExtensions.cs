@@ -70,9 +70,9 @@ namespace Microsoft.Extensions.DependencyInjection
 		/// </summary>
 		/// <param name="services"></param>
 		/// <param name="connectionString">Connection string must contain the database name</param>
-		public static void AddIdentityWithMongoStores(this IServiceCollection services, string connectionString)
+		public static IdentityBuilder AddIdentityWithMongoStores(this IServiceCollection services, string connectionString)
 		{
-			services.AddIdentityWithMongoStoresUsingCustomTypes<IdentityUser, IdentityRole>(connectionString);
+			return services.AddIdentityWithMongoStoresUsingCustomTypes<IdentityUser, IdentityRole>(connectionString);
 		}
 
 		/// <summary>
@@ -83,11 +83,11 @@ namespace Microsoft.Extensions.DependencyInjection
 		/// <typeparam name="TRole"></typeparam>
 		/// <param name="services"></param>
 		/// <param name="connectionString">Connection string must contain the database name</param>
-		public static void AddIdentityWithMongoStoresUsingCustomTypes<TUser, TRole>(this IServiceCollection services, string connectionString)
+		public static IdentityBuilder AddIdentityWithMongoStoresUsingCustomTypes<TUser, TRole>(this IServiceCollection services, string connectionString)
 			where TUser : IdentityUser
 			where TRole : IdentityRole
 		{
-			services.AddIdentity<TUser, TRole>()
+			return services.AddIdentity<TUser, TRole>()
 				.RegisterMongoStores<TUser, TRole>(connectionString);
 		}
 	}

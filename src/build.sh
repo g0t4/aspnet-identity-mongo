@@ -20,3 +20,4 @@ dotnet test -c Release CoreIntegrationTests
 // create NuGet package
 dotnet pack -c Release Microsoft.AspNetCore.Identity.MongoDB
 
+nuget add Microsoft.AspNetCore.Identity.MongoDB\bin\Release\Microsoft.AspNetCore.Identity.MongoDB.1.0.0.nupkg -Source C:\Code\scratch\localnugetfeedtesting

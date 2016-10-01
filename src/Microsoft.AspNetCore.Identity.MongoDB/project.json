@@ -1,6 +1,6 @@
 {
   "name": "Microsoft.AspNetCore.Identity.MongoDB",
-  "version": "1.0.1",
+  "version": "1.0.2",
 
   "description":
     "A MongoDB provider for ASP.NET Core Identity framework.",
@@ -14,7 +14,7 @@
   "packOptions": {
     "summary": "A MongoDB provider for ASP.NET Core Identity",
     "owners": ["Wes Higbee"],
-    "releaseNotes": "Port of AspNet.Identity.MongoDB to ASP.NET Core",
+    "releaseNotes": "Convert back to using DateTime to store LockoutEndDate, DateTimeOffset serializes to an array of values which could make it hard for people to sort on this and query on this. Also DateTime was used in the v2 driver, so this makes the upgrade story easier.",
 
     "tags": [
       "aspnetcore",

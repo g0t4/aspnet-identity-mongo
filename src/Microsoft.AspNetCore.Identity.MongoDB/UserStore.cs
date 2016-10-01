@@ -240,12 +240,13 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 
 		public virtual Task<DateTimeOffset?> GetLockoutEndDateAsync(TUser user, CancellationToken token)
 		{
-			return Task.FromResult(user.LockoutEndDateUtc);
+			DateTimeOffset? dateTimeOffset = user.LockoutEndDateUtc;
+			return Task.FromResult(dateTimeOffset);
 		}
 
 		public virtual Task SetLockoutEndDateAsync(TUser user, DateTimeOffset? lockoutEnd, CancellationToken token)
 		{
-			user.LockoutEndDateUtc = lockoutEnd;
+			user.LockoutEndDateUtc = lockoutEnd?.UtcDateTime;
 			return Task.FromResult(0);
 		}
 

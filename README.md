@@ -56,4 +56,3 @@ run commands in [](build.sh)
 	- On IdentityUser documents, convert the values in the Roles array to uppercase
 - User names need to be normalized as follows
 	- On IdentityUser documents, create a NormalizedUserName field = uppercase(UserName) and create a NormalizedEmail field = uppercase(Email). Leave UserName and Email as is.
-- LockoutEndDateUtc - type changed in code, but I think it is still the same in db, I have yet to verify if this requires a migration.

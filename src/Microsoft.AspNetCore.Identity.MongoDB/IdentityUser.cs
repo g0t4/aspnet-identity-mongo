@@ -43,7 +43,7 @@
 
 		public virtual bool TwoFactorEnabled { get; set; }
 
-		public virtual DateTimeOffset? LockoutEndDateUtc { get; set; }
+		public virtual DateTime? LockoutEndDateUtc { get; set; }
 
 		public virtual bool LockoutEnabled { get; set; }
 

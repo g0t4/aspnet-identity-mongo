@@ -16,7 +16,7 @@
 			Name = roleName;
 		}
 
-		[BsonRepresentation(BsonType.ObjectId)]
+		[BsonId]
 		public string Id { get; private set; }
 
 		public string Name { get; set; }

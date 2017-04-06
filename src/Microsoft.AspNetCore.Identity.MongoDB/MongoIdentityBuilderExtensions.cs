@@ -17,8 +17,8 @@ namespace Microsoft.Extensions.DependencyInjection
 		/// <param name="connectionString">Must contain the database name</param>
 		public static IdentityBuilder RegisterMongoStores<TUser, TRole>(this IdentityBuilder builder, string connectionString)
 			where TRole : IdentityRole
-			where TUser : IdentityUser
-		{
+			where TUser : IdentityUserBase
+        {
 			var url = new MongoUrl(connectionString);
 			var client = new MongoClient(url);
 			if (url.DatabaseName == null)
@@ -44,8 +44,8 @@ namespace Microsoft.Extensions.DependencyInjection
 			Func<IServiceProvider, IMongoCollection<TUser>> usersCollectionFactory,
 			Func<IServiceProvider, IMongoCollection<TRole>> rolesCollectionFactory)
 			where TRole : IdentityRole
-			where TUser : IdentityUser
-		{
+			where TUser : IdentityUserBase
+        {
 			if (typeof(TUser) != builder.UserType)
 			{
 				var message = "User type passed to RegisterMongoStores must match user type passed to AddIdentity. "
@@ -84,8 +84,8 @@ namespace Microsoft.Extensions.DependencyInjection
 		/// <param name="services"></param>
 		/// <param name="connectionString">Connection string must contain the database name</param>
 		public static IdentityBuilder AddIdentityWithMongoStoresUsingCustomTypes<TUser, TRole>(this IServiceCollection services, string connectionString)
-			where TUser : IdentityUser
-			where TRole : IdentityRole
+			where TUser : IdentityUserBase
+            where TRole : IdentityRole
 		{
 			return services.AddIdentity<TUser, TRole>()
 				.RegisterMongoStores<TUser, TRole>(connectionString);

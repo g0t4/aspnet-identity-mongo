@@ -29,8 +29,8 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 			IUserLockoutStore<TUser>,
 			IQueryableUserStore<TUser>,
 			IUserAuthenticationTokenStore<TUser>
-		where TUser : IdentityUser
-	{
+		where TUser : IdentityUserBase
+    {
 		private readonly IMongoCollection<TUser> _Users;
 
 		public UserStore(IMongoCollection<TUser> users)

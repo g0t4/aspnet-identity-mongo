@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.10
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CoreTests", "CoreTests\CoreTests.xproj", "{EAC53866-6DBF-40B7-900A-22267FD0634A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreTests", "CoreTests\CoreTests.csproj", "{EAC53866-6DBF-40B7-900A-22267FD0634A}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.AspNetCore.Identity.MongoDB", "Microsoft.AspNetCore.Identity.MongoDB\Microsoft.AspNetCore.Identity.MongoDB.xproj", "{6DFF5058-E107-459E-87C3-DA41B2C1463C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.AspNetCore.Identity.MongoDB", "Microsoft.AspNetCore.Identity.MongoDB\Microsoft.AspNetCore.Identity.MongoDB.csproj", "{6DFF5058-E107-459E-87C3-DA41B2C1463C}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CoreIntegrationTests", "CoreIntegrationTests\CoreIntegrationTests.xproj", "{836F4635-9B6B-4090-8CDB-9CD9F7BEA829}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreIntegrationTests", "CoreIntegrationTests\CoreIntegrationTests.csproj", "{836F4635-9B6B-4090-8CDB-9CD9F7BEA829}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,5 +30,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {61340AF1-9A52-4D3F-9C12-F555C3A1CFF6}
 	EndGlobalSection
 EndGlobal

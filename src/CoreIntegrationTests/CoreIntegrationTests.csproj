@@ -2,8 +2,6 @@
 
   <PropertyGroup>
     <TargetFrameworks>net451;netcoreapp1.0</TargetFrameworks>
-    <AssemblyName>CoreIntegrationTests</AssemblyName>
-    <PackageId>CoreIntegrationTests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">$(PackageTargetFallback);portable-net45+win8</PackageTargetFallback>
     <RuntimeFrameworkVersion Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">1.0.4</RuntimeFrameworkVersion>

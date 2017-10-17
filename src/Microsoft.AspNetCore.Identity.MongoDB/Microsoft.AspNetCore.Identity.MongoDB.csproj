@@ -6,7 +6,6 @@
     <Authors>Wes Higbee</Authors>
     <TargetFrameworks>net451;netstandard1.5</TargetFrameworks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <AssemblyName>Microsoft.AspNetCore.Identity.MongoDB</AssemblyName>
     <PackageId>Microsoft.AspNetCore.Identity.MongoDB</PackageId>
     <PackageTags>aspnetcore;mongo;mongodb;identity;membership</PackageTags>
     <PackageReleaseNotes>Convert back to using DateTime to store LockoutEndDate, DateTimeOffset serializes to an array of values which could make it hard for people to sort on this and query on this. Also DateTime was used in the v2 driver, so this makes the upgrade story easier.</PackageReleaseNotes>

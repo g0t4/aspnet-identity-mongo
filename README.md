@@ -51,8 +51,13 @@ run commands in [](build.sh)
 
 ## Migrating from ASP.NET Identity 2.0
 
+<<<<<<< HEAD
 - Roles names need to be normalized as follows
 	- On IdentityRole documents, create a NormalizedName field = uppercase(Name). Leave Name as is.
 	- On IdentityUser documents, convert the values in the Roles array to uppercase
 - User names need to be normalized as follows
 	- On IdentityUser documents, create a NormalizedUserName field = uppercase(UserName) and create a NormalizedEmail field = uppercase(Email). Leave UserName and Email as is.
+=======
+- [Building a mongodb provider for the new ASP.NET Identity framework - Part 1](http://devblog.weshigbee.name/posts/building-a-mongodb-provider-for-the-new-asp.net-identity-framework-part-1)
+- [Building a mongodb provider for the new ASP.NET Identity framework - Part 2 RoleStore And Sample](http://devblog.weshigbee.name/posts/building-a-mongodb-provider-for-the-new-asp.net-identity-framework-part-2-rolestore-and-sample)
+>>>>>>> g0t4/master

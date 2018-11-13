@@ -112,13 +112,13 @@
 		[BsonIgnoreIfNull]
 		public virtual List<IdentityUserToken> Tokens { get; set; }
 
-		private IdentityUserToken GetToken(string loginProider, string name)
+		private IdentityUserToken GetToken(string loginProvider, string name)
 			=> Tokens
-				.FirstOrDefault(t => t.LoginProvider == loginProider && t.Name == name);
+				.FirstOrDefault(t => t.LoginProvider == loginProvider && t.Name == name);
 
-		public virtual void SetToken(string loginProider, string name, string value)
+		public virtual void SetToken(string loginProvider, string name, string value)
 		{
-			var existingToken = GetToken(loginProider, name);
+			var existingToken = GetToken(loginProvider, name);
 			if (existingToken != null)
 			{
 				existingToken.Value = value;
@@ -127,15 +127,15 @@
 
 			Tokens.Add(new IdentityUserToken
 			{
-				LoginProvider = loginProider,
+				LoginProvider = loginProvider,
 				Name = name,
 				Value = value
 			});
 		}
 
-		public virtual string GetTokenValue(string loginProider, string name)
+		public virtual string GetTokenValue(string loginProvider, string name)
 		{
-			return GetToken(loginProider, name)?.Value;
+			return GetToken(loginProvider, name)?.Value;
 		}
 
 		public virtual void RemoveToken(string loginProvider, string name)
